@@ -1,5 +1,5 @@
+```html
 <!DOCTYPE html>
-
 <html lang="sv">
 <head>
 <meta charset="UTF-8">
@@ -10,7 +10,6 @@
 :root{
   --bg:#07111f;
   --panel:#0d1b2d;
-  --panel2:#11243a;
   --text:#f4f7fb;
   --muted:#9fb0c5;
   --accent:#7c5cff;
@@ -301,7 +300,6 @@ footer{
   }
 }
 </style>
-
 </head>
 
 <body>
@@ -331,15 +329,17 @@ footer{
   </p>
 
   <div class="buttons">
+
     <button class="btn primary" onclick="openStudio()">
       Starta ProAssist
     </button>
 
-```
-<button class="btn secondary" onclick="document.getElementById('tools').scrollIntoView({behavior:'smooth'})">
-  Se verktygen
-</button>
-```
+    <button
+      class="btn secondary"
+      onclick="document.getElementById('tools').scrollIntoView({behavior:'smooth'})"
+    >
+      Se verktygen
+    </button>
 
   </div>
 
@@ -349,165 +349,189 @@ footer{
 
   <div class="grid">
 
-```
-<div class="card" onclick="selectTab('video')">
-  <div class="icon">🎬</div>
-  <h3>AI Video</h3>
-  <p>Skriv en idé och skapa en videogenererings-prompt.</p>
-</div>
+    <div class="card" onclick="selectTab('video')">
+      <div class="icon">🎬</div>
+      <h3>AI Video</h3>
+      <p>Skriv en idé och skapa en videogenererings-prompt.</p>
+    </div>
 
-<div class="card" onclick="selectTab('image')">
-  <div class="icon">🖼️</div>
-  <h3>AI Bilder</h3>
-  <p>Beskriv bilden du vill skapa och få en färdig prompt.</p>
-</div>
+    <div class="card" onclick="selectTab('image')">
+      <div class="icon">🖼️</div>
+      <h3>AI Bilder</h3>
+      <p>Beskriv bilden du vill skapa och få en färdig prompt.</p>
+    </div>
 
-<div class="card" onclick="selectTab('school')">
-  <div class="icon">📚</div>
-  <h3>Skolhjälp</h3>
-  <p>Få hjälp att förstå matte, svenska, engelska och NO.</p>
-</div>
+    <div class="card" onclick="selectTab('school')">
+      <div class="icon">📚</div>
+      <h3>Skolhjälp</h3>
+      <p>Få hjälp att förstå matte, svenska, engelska och NO.</p>
+    </div>
 
-<div class="card" onclick="selectTab('chat')">
-  <div class="icon">💬</div>
-  <h3>AI Chat</h3>
-  <p>Ställ frågor och använd ProAssist som studiehjälp.</p>
-</div>
-```
+    <div class="card" onclick="selectTab('chat')">
+      <div class="icon">💬</div>
+      <h3>AI Chat</h3>
+      <p>Ställ frågor och använd ProAssist som studiehjälp.</p>
+    </div>
 
   </div>
 
   <div class="app" id="app">
 
-```
-<div class="tabs">
+    <div class="tabs">
 
-  <button class="tab active" data-tab="video" onclick="selectTab('video')">
-    🎬 Video
-  </button>
+      <button
+        class="tab active"
+        data-tab="video"
+        onclick="selectTab('video')"
+      >
+        🎬 Video
+      </button>
 
-  <button class="tab" data-tab="image" onclick="selectTab('image')">
-    🖼️ Bild
-  </button>
+      <button
+        class="tab"
+        data-tab="image"
+        onclick="selectTab('image')"
+      >
+        🖼️ Bild
+      </button>
 
-  <button class="tab" data-tab="school" onclick="selectTab('school')">
-    📚 Skola
-  </button>
+      <button
+        class="tab"
+        data-tab="school"
+        onclick="selectTab('school')"
+      >
+        📚 Skola
+      </button>
 
-  <button class="tab" data-tab="chat" onclick="selectTab('chat')">
-    💬 Chat
-  </button>
+      <button
+        class="tab"
+        data-tab="chat"
+        onclick="selectTab('chat')"
+      >
+        💬 Chat
+      </button>
 
-</div>
-
-<!-- VIDEO -->
-
-<div class="panel active" id="video">
-
-  <h2>🎬 AI Video</h2>
-
-  <p>Skriv vad du vill att videon ska innehålla.</p>
-
-  <textarea
-    id="videoInput"
-    placeholder="Exempel: En rolig 10 sekunders video där en pizza levereras mitt i natten..."
-  ></textarea>
-
-  <div class="actions">
-    <button class="btn primary" onclick="makePrompt('video')">
-      Skapa video-prompt
-    </button>
-  </div>
-
-  <div class="output" id="videoOut">
-    Din prompt visas här.
-  </div>
-
-</div>
-
-<!-- IMAGE -->
-
-<div class="panel" id="image">
-
-  <h2>🖼️ AI Bilder</h2>
-
-  <p>Beskriv bilden du vill skapa.</p>
-
-  <textarea
-    id="imageInput"
-    placeholder="Exempel: En futuristisk svensk stad med flygande bilar..."
-  ></textarea>
-
-  <div class="actions">
-    <button class="btn primary" onclick="makePrompt('image')">
-      Skapa bild-prompt
-    </button>
-  </div>
-
-  <div class="output" id="imageOut">
-    Din prompt visas här.
-  </div>
-
-</div>
-
-<!-- SCHOOL -->
-
-<div class="panel" id="school">
-
-  <h2>📚 Skolhjälp</h2>
-
-  <p>
-    Skriv en uppgift eller fråga och få hjälp att formulera
-    en bra fråga till AI.
-  </p>
-
-  <textarea
-    id="schoolInput"
-    placeholder="Exempel: Förklara fotosyntesen så att en elev i årskurs 8 förstår..."
-  ></textarea>
-
-  <div class="actions">
-    <button class="btn primary" onclick="schoolHelp()">
-      Förbättra frågan
-    </button>
-  </div>
-
-  <div class="output" id="schoolOut">
-    Här kommer ett bättre frågeförslag.
-  </div>
-
-</div>
-
-<!-- CHAT -->
-
-<div class="panel" id="chat">
-
-  <h2>💬 AI Chat</h2>
-
-  <div class="chatbox" id="chatbox">
-
-    <div class="msg ai">
-      Hej! Jag är ProAssist. Vad vill du ha hjälp med?
     </div>
 
-  </div>
+    <!-- VIDEO -->
 
-  <div class="chat-input-row">
+    <div class="panel active" id="video">
 
-    <input
-      id="chatInput"
-      placeholder="Skriv din fråga..."
-      onkeydown="if(event.key==='Enter') sendChat()"
-    >
+      <h2>🎬 AI Video</h2>
 
-    <button class="btn primary" onclick="sendChat()">
-      Skicka
-    </button>
+      <p>Skriv vad du vill att videon ska innehålla.</p>
 
-  </div>
+      <textarea
+        id="videoInput"
+        placeholder="Exempel: En rolig 10 sekunders video där en pizza levereras mitt i natten..."
+      ></textarea>
 
-</div>
-```
+      <div class="actions">
+        <button
+          class="btn primary"
+          onclick="makePrompt('video')"
+        >
+          Skapa video-prompt
+        </button>
+      </div>
+
+      <div class="output" id="videoOut">
+        Din prompt visas här.
+      </div>
+
+    </div>
+
+    <!-- IMAGE -->
+
+    <div class="panel" id="image">
+
+      <h2>🖼️ AI Bilder</h2>
+
+      <p>Beskriv bilden du vill skapa.</p>
+
+      <textarea
+        id="imageInput"
+        placeholder="Exempel: En futuristisk svensk stad med flygande bilar..."
+      ></textarea>
+
+      <div class="actions">
+        <button
+          class="btn primary"
+          onclick="makePrompt('image')"
+        >
+          Skapa bild-prompt
+        </button>
+      </div>
+
+      <div class="output" id="imageOut">
+        Din prompt visas här.
+      </div>
+
+    </div>
+
+    <!-- SCHOOL -->
+
+    <div class="panel" id="school">
+
+      <h2>📚 Skolhjälp</h2>
+
+      <p>
+        Skriv en uppgift eller fråga och få hjälp att formulera
+        en bra fråga till AI.
+      </p>
+
+      <textarea
+        id="schoolInput"
+        placeholder="Exempel: Förklara fotosyntesen så att en elev i årskurs 8 förstår..."
+      ></textarea>
+
+      <div class="actions">
+        <button
+          class="btn primary"
+          onclick="schoolHelp()"
+        >
+          Förbättra frågan
+        </button>
+      </div>
+
+      <div class="output" id="schoolOut">
+        Här kommer ett bättre frågeförslag.
+      </div>
+
+    </div>
+
+    <!-- CHAT -->
+
+    <div class="panel" id="chat">
+
+      <h2>💬 AI Chat</h2>
+
+      <div class="chatbox" id="chatbox">
+
+        <div class="msg ai">
+          Hej! Jag är ProAssist. Vad vill du ha hjälp med?
+        </div>
+
+      </div>
+
+      <div class="chat-input-row">
+
+        <input
+          id="chatInput"
+          placeholder="Skriv din fråga..."
+          onkeydown="if(event.key==='Enter') sendChat()"
+        >
+
+        <button
+          class="btn primary"
+          onclick="sendChat()"
+        >
+          Skicka
+        </button>
+
+      </div>
+
+    </div>
 
   </div>
 
@@ -520,34 +544,52 @@ footer{
 <script>
 
 function openStudio(){
+
   document.getElementById('app').scrollIntoView({
     behavior:'smooth'
   });
+
 }
+
 
 function selectTab(name){
 
   document.querySelectorAll('.panel').forEach(function(panel){
+
     panel.classList.remove('active');
+
   });
+
 
   document.querySelectorAll('.tab').forEach(function(tab){
+
     tab.classList.remove('active');
+
   });
 
+
   document.getElementById(name).classList.add('active');
+
 
   const selectedTab =
     document.querySelector('[data-tab="' + name + '"]');
 
+
   if(selectedTab){
+
     selectedTab.classList.add('active');
+
   }
 
+
   document.getElementById('app').scrollIntoView({
+
     behavior:'smooth',
+
     block:'center'
+
   });
+
 }
 
 
@@ -556,17 +598,23 @@ function makePrompt(type){
   const input =
     document.getElementById(type + 'Input').value.trim();
 
+
   if(!input){
+
     alert('Skriv först en idé.');
+
     return;
+
   }
 
+
   let output;
+
 
   if(type === 'video'){
 
     output =
-      `Create a high-quality short video based on this idea: "${input}".
+`Create a high-quality short video based on this idea: "${input}".
 
 Make it engaging, clear and visually detailed.
 
@@ -585,7 +633,7 @@ Include:
   }else{
 
     output =
-      `Create a high-quality image based on this idea: "${input}".
+`Create a high-quality image based on this idea: "${input}".
 
 Make it detailed and visually appealing.
 
@@ -600,7 +648,9 @@ Include:
 
   }
 
+
   document.getElementById(type + 'Out').textContent = output;
+
 }
 
 
@@ -609,19 +659,25 @@ function schoolHelp(){
   const question =
     document.getElementById('schoolInput').value.trim();
 
+
   if(!question){
+
     alert('Skriv först din fråga.');
+
     return;
+
   }
 
+
   document.getElementById('schoolOut').textContent =
-    `Hjälp mig med följande skoluppgift: "${question}".
+`Hjälp mig med följande skoluppgift: "${question}".
 
 Förklara steg för steg på en nivå som passar en elev i årskurs 8.
 
 Använd enkla ord och ge exempel.
 
 Hjälp mig förstå istället för att bara ge svaret.`;
+
 }
 
 
@@ -636,14 +692,20 @@ async function sendChat(){
   const message =
     input.value.trim();
 
+
   if(!message){
+
     return;
+
   }
+
 
   chatbox.innerHTML +=
     `<div class="msg user">${escapeHtml(message)}</div>`;
 
+
   input.value = '';
+
 
   const loading =
     document.createElement('div');
@@ -655,8 +717,10 @@ async function sendChat(){
 
   chatbox.appendChild(loading);
 
+
   chatbox.scrollTop =
     chatbox.scrollHeight;
+
 
   try{
 
@@ -676,22 +740,26 @@ async function sendChat(){
         }
       );
 
+
     const data =
       await response.json();
+
 
     if(!response.ok){
 
       throw new Error(
-        data.error ||
         data.details ||
+        data.error ||
         'Serverfel: ' + response.status
       );
 
     }
 
+
     loading.textContent =
       data.reply ||
       'Inget svar kom tillbaka.';
+
 
   }catch(error){
 
@@ -700,10 +768,13 @@ async function sendChat(){
     loading.textContent =
       'Kunde inte ansluta till AI-servern: ' +
       error.message;
+
   }
+
 
   chatbox.scrollTop =
     chatbox.scrollHeight;
+
 }
 
 
@@ -731,3 +802,4 @@ function escapeHtml(text){
 
 </body>
 </html>
+```
