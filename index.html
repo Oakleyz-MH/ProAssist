@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="sv">
 <head>
@@ -303,9 +304,11 @@ footer {
 
 .chat-layout {
   display: grid;
-  grid-template-columns: 210px 1fr;
+  grid-template-columns: 210px minmax(0, 1fr);
   gap: 15px;
   min-height: 520px;
+  width: 100%;
+  min-width: 0;
 }
 
 .chat-sidebar {
@@ -313,6 +316,7 @@ footer {
   border: 1px solid #343b60;
   border-radius: 12px;
   padding: 12px;
+  min-width: 0;
 }
 
 .new-chat-btn {
@@ -355,6 +359,7 @@ footer {
   display: flex;
   flex-direction: column;
   min-width: 0;
+  width: 100%;
   background: #090e20;
   border: 1px solid #343b60;
   border-radius: 12px;
@@ -370,6 +375,7 @@ footer {
   display: flex;
   flex-direction: column;
   gap: 15px;
+  min-width: 0;
 }
 
 .chat-message {
@@ -399,20 +405,31 @@ footer {
   border-top: 1px solid #343b60;
   padding: 14px;
   display: flex;
+  flex-direction: row;
   gap: 10px;
   align-items: flex-end;
+  width: 100%;
+  min-width: 0;
 }
 
 .chat-input-area textarea {
   min-height: 50px;
   max-height: 130px;
   resize: vertical;
-  flex: 1;
+  flex: 1 1 0;
+  width: 0;
+  min-width: 0;
+  max-width: 100%;
+  display: block;
+  white-space: pre-wrap;
+  word-break: normal;
+  overflow-wrap: normal;
 }
 
 .chat-input-area button {
   margin: 0;
   white-space: nowrap;
+  flex: 0 0 auto;
 }
 
 .chat-status {
@@ -534,7 +551,7 @@ button {
   }
 
   .chat-layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .chat-sidebar {
@@ -679,6 +696,8 @@ button {
     flex-direction: column;
     gap: 10px;
     min-height: 0;
+    width: 100%;
+    min-width: 0;
   }
 
   .chat-sidebar {
@@ -707,6 +726,7 @@ button {
   .chat-main {
     min-height: 480px;
     width: 100%;
+    min-width: 0;
   }
 
   .chat-messages {
@@ -726,17 +746,26 @@ button {
   .chat-input-area {
     padding: 10px;
     gap: 8px;
+    flex-direction: row;
+    align-items: stretch;
+    width: 100%;
+    min-width: 0;
   }
 
   .chat-input-area textarea {
     min-height: 48px;
     max-height: 110px;
     font-size: 16px;
+    width: 0;
+    min-width: 0;
+    flex: 1 1 0;
   }
 
   .chat-input-area button {
     min-height: 48px;
     padding: 12px;
+    width: auto;
+    flex: 0 0 auto;
   }
 
   .chat-status {
@@ -776,17 +805,41 @@ button {
   }
 
   .chat-input-area {
-    flex-direction: column;
+    flex-direction: row;
     align-items: stretch;
   }
 
+  .chat-input-area textarea {
+    width: 0;
+    min-width: 0;
+    flex: 1 1 0;
+  }
+
   .chat-input-area button {
-    width: 100%;
+    width: auto;
   }
 
   .chat-messages {
     max-height: 50vh;
   }
+}
+
+/* EXTRA FIX FÖR MOBILENS SKRIVFÄLT */
+
+.chat-layout,
+.chat-main,
+.chat-input-area {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.chat-input-area textarea {
+  box-sizing: border-box;
+  white-space: pre-wrap;
+  overflow-wrap: normal;
+  word-break: normal;
+  writing-mode: horizontal-tb;
+  direction: ltr;
 }
 
 /* SPRÅKVÄLJARE */
