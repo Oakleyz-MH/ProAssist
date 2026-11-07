@@ -421,6 +421,84 @@ footer {
   padding: 0 15px 10px;
 }
 
+/* AI CHAT STARTMENY */
+
+.chat-home {
+  padding: 20px;
+}
+
+.chat-home h2 {
+  font-size: 25px;
+  margin-bottom: 10px;
+}
+
+.chat-home > p {
+  color: #aeb3cc;
+  margin-bottom: 25px;
+  line-height: 1.6;
+}
+
+.chat-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.chat-option {
+  background: #171d35;
+  border: 1px solid #343b60;
+  border-radius: 13px;
+  padding: 22px;
+  color: white;
+  text-align: left;
+  cursor: pointer;
+  transition: .2s;
+  min-height: 135px;
+}
+
+.chat-option:hover {
+  border-color: #9875ff;
+  transform: translateY(-3px);
+  background: #202044;
+}
+
+.chat-option .option-icon {
+  font-size: 30px;
+  margin-bottom: 12px;
+}
+
+.chat-option h3 {
+  margin-bottom: 7px;
+}
+
+.chat-option p {
+  color: #aeb3cc;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.chat-topbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border-bottom: 1px solid #343b60;
+}
+
+.back-chat-btn {
+  background: #252044;
+  border: 1px solid #504477;
+  color: white;
+  padding: 9px 13px;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.chat-mode-title {
+  font-weight: bold;
+  color: #d8daf0;
+}
+
 /* MOBILANPASSNING */
 
 button,
@@ -666,6 +744,18 @@ button {
     padding: 0 10px 10px;
   }
 
+  .chat-home {
+    padding: 12px;
+  }
+
+  .chat-options {
+    grid-template-columns: 1fr;
+  }
+
+  .chat-option {
+    min-height: 110px;
+  }
+
   footer {
     font-size: 13px;
     padding: 28px 15px;
@@ -805,33 +895,101 @@ body {
       <button class="tab" data-tab="school">Skola</button>
     </div>
 
+    <!-- AI CHAT -->
     <div class="panel active" id="panel-chat">
-      <h2>🤖 AI Chat</h2>
-      <p>Chatta med ProAssist och få hjälp med dina frågor.</p>
 
-      <div class="chat-layout">
-        <aside class="chat-sidebar">
-          <button class="new-chat-btn" id="newChat">+ Ny chatt</button>
-          <div class="chat-list" id="chatList"></div>
-        </aside>
+      <div id="chatHome" class="chat-home">
+        <h2>🤖 Välkommen till ProAssist AI</h2>
 
-        <div class="chat-main">
-          <div class="chat-messages" id="chatMessages"></div>
+        <p>
+          Vad vill du ha hjälp med idag?
+          Välj ett alternativ för att börja chatta.
+        </p>
 
-          <div class="chat-input-area">
-            <textarea id="chatInput"
-              placeholder="Skriv ett meddelande..."
-              rows="2"></textarea>
-            <button class="action-btn" id="sendChat">Skicka</button>
-          </div>
+        <div class="chat-options">
 
-          <div class="chat-status" id="chatStatus">
-            Dina chattar sparas i den här webbläsaren.
+          <button class="chat-option" onclick="startChatMode('general')">
+            <div class="option-icon">💬</div>
+            <h3>Vanlig AI-chatt</h3>
+            <p>Ställ frågor och prata om vad du vill.</p>
+          </button>
+
+          <button class="chat-option" onclick="startChatMode('school')">
+            <div class="option-icon">📚</div>
+            <h3>Skolhjälp</h3>
+            <p>Få hjälp med läxor och förstå skolämnen.</p>
+          </button>
+
+          <button class="chat-option" onclick="startChatMode('creative')">
+            <div class="option-icon">💡</div>
+            <h3>Idéer och kreativitet</h3>
+            <p>Skapa idéer, berättelser och nya projekt.</p>
+          </button>
+
+          <button class="chat-option" onclick="startChatMode('knowledge')">
+            <div class="option-icon">🌍</div>
+            <h3>Allmän kunskap</h3>
+            <p>Lär dig om världen, vetenskap, historia och mer.</p>
+          </button>
+
+          <button class="chat-option" onclick="startChatMode('writing')">
+            <div class="option-icon">✍️</div>
+            <h3>Skrivhjälp</h3>
+            <p>Få hjälp med texter, stavning och formuleringar.</p>
+          </button>
+
+        </div>
+
+        <div style="margin-top:30px;">
+          <h3 style="margin-bottom:12px;">🕘 Dina tidigare chattar</h3>
+          <div id="chatHomeList" class="chat-list"></div>
+        </div>
+      </div>
+
+      <div id="chatConversation" style="display:none;">
+
+        <div class="chat-topbar">
+          <button class="back-chat-btn" onclick="showChatHome()">
+            ← Tillbaka
+          </button>
+
+          <span class="chat-mode-title" id="chatModeTitle">
+            💬 Vanlig AI-chatt
+          </span>
+        </div>
+
+        <div class="chat-layout">
+          <aside class="chat-sidebar">
+            <button class="new-chat-btn" id="newChat">
+              + Ny chatt
+            </button>
+
+            <div class="chat-list" id="chatList"></div>
+          </aside>
+
+          <div class="chat-main">
+            <div class="chat-messages" id="chatMessages"></div>
+
+            <div class="chat-input-area">
+              <textarea id="chatInput"
+                placeholder="Skriv ett meddelande..."
+                rows="2"></textarea>
+
+              <button class="action-btn" id="sendChat">
+                Skicka
+              </button>
+            </div>
+
+            <div class="chat-status" id="chatStatus">
+              Dina chattar sparas i den här webbläsaren.
+            </div>
           </div>
         </div>
+
       </div>
     </div>
 
+    <!-- AI BILDER -->
     <div class="panel" id="panel-images">
       <h2>🎨 AI Bilder</h2>
       <p>Skapa en egen grafisk bild direkt i webbläsaren.</p>
@@ -867,6 +1025,7 @@ body {
       </p>
     </div>
 
+    <!-- AI VIDEO -->
     <div class="panel" id="panel-video">
       <h2>🎬 AI Video</h2>
       <p>Skapa en idé och en prompt till din nästa video.</p>
@@ -893,6 +1052,7 @@ body {
       <div class="output" id="videoOutput">Din videoprompt visas här.</div>
     </div>
 
+    <!-- SKOLHJÄLP -->
     <div class="panel" id="panel-school">
       <h2>📚 Skolhjälp</h2>
       <p>Få hjälp att förstå olika skolämnen.</p>
@@ -1121,6 +1281,106 @@ const languageNames = {
 };
 
 // ===============================
+// AI CHAT-LÄGEN
+// ===============================
+
+const chatModes = {
+  general: {
+    title: "💬 Vanlig AI-chatt",
+    instruction:
+      "You are a helpful general AI assistant. Answer questions clearly and naturally."
+  },
+
+  school: {
+    title: "📚 Skolhjälp",
+    instruction:
+      "You are a helpful school tutor. Explain things simply at approximately grade 8 level. Help the student understand, use examples and guide learning."
+  },
+
+  creative: {
+    title: "💡 Idéer och kreativitet",
+    instruction:
+      "You are a creative assistant. Help with ideas, projects, stories, brainstorming and creative thinking."
+  },
+
+  knowledge: {
+    title: "🌍 Allmän kunskap",
+    instruction:
+      "You are a general knowledge assistant. Explain history, geography, science, technology, sports and culture. Be accurate, distinguish facts from opinions and say when you are uncertain."
+  },
+
+  writing: {
+    title: "✍️ Skrivhjälp",
+    instruction:
+      "You are a writing assistant. Help improve spelling, grammar, structure and wording while keeping the user's intended meaning and writing level."
+  }
+};
+
+let currentChatMode = "general";
+
+function startChatMode(mode) {
+  if (sendingMessage) return;
+
+  currentChatMode = chatModes[mode] ? mode : "general";
+
+  createChat();
+
+  document.getElementById("chatHome").style.display = "none";
+  document.getElementById("chatConversation").style.display = "block";
+
+  document.getElementById("chatModeTitle").textContent =
+    chatModes[currentChatMode].title;
+
+  renderChat();
+  renderChatList();
+}
+
+function showChatHome() {
+  if (sendingMessage) return;
+
+  document.getElementById("chatConversation").style.display = "none";
+  document.getElementById("chatHome").style.display = "block";
+
+  renderChatHomeList();
+}
+
+function renderChatHomeList() {
+  const list = document.getElementById("chatHomeList");
+  list.replaceChildren();
+
+  chats.forEach(chat => {
+    const button = document.createElement("button");
+
+    button.className = "chat-history-btn";
+    button.textContent = chat.title || "Ny chatt";
+
+    button.addEventListener("click", () => {
+      if (sendingMessage) return;
+
+      currentChatId = chat.id;
+      currentChatMode = chat.mode && chatModes[chat.mode]
+        ? chat.mode
+        : "general";
+
+      document.getElementById("chatHome").style.display = "none";
+      document.getElementById("chatConversation").style.display = "block";
+
+      document.getElementById("chatModeTitle").textContent =
+        chatModes[currentChatMode].title;
+
+      renderChat();
+      renderChatList();
+    });
+
+    list.appendChild(button);
+  });
+
+  if (chats.length === 0) {
+    list.textContent = "Du har inga tidigare chattar ännu.";
+  }
+}
+
+// ===============================
 // SPARADE CHATTAR
 // ===============================
 
@@ -1160,6 +1420,7 @@ function createChat() {
     id: Date.now().toString() +
       Math.random().toString(16).slice(2),
     title: "Ny chatt",
+    mode: currentChatMode,
     messages: []
   };
 
@@ -1190,6 +1451,14 @@ function renderChatList() {
       if (sendingMessage) return;
 
       currentChatId = chat.id;
+
+      currentChatMode = chat.mode && chatModes[chat.mode]
+        ? chat.mode
+        : "general";
+
+      document.getElementById("chatModeTitle").textContent =
+        chatModes[currentChatMode].title;
+
       renderChat();
       renderChatList();
     });
@@ -1207,8 +1476,10 @@ function renderChat() {
   if (!chat || chat.messages.length === 0) {
     const welcome = document.createElement("div");
     welcome.className = "chat-message assistant";
+
     welcome.textContent =
       "Hej! Jag är ProAssist. Vad vill du ha hjälp med?";
+
     area.appendChild(welcome);
     return;
   }
@@ -1226,6 +1497,10 @@ function renderChat() {
 
   area.scrollTop = area.scrollHeight;
 }
+
+// ===============================
+// SKICKA CHATTMEDDELANDE
+// ===============================
 
 async function sendChatMessage() {
   if (sendingMessage) return;
@@ -1279,10 +1554,11 @@ async function sendChatMessage() {
     messagesForAI.unshift({
       role: "user",
       text:
-        "IMPORTANT LANGUAGE INSTRUCTION: Please answer in " +
+        "IMPORTANT: " +
+        chatModes[currentChatMode].instruction +
+        " Answer in " +
         selectedLanguageName +
-        ". Keep using this language for the entire conversation. " +
-        "Do not translate the user's question unless asked."
+        ". Keep using this language for the entire conversation."
     });
 
     const response = await fetch(
@@ -1647,12 +1923,9 @@ document.getElementById("downloadImageBtn").addEventListener(
 
 if (chats.length > 0) {
   currentChatId = chats[0].id;
-} else {
-  createChat();
 }
 
-renderChat();
-renderChatList();
+renderChatHomeList();
 
 </script>
 </body>
