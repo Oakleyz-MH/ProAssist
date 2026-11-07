@@ -13,11 +13,18 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
 body {
   font-family: Arial, sans-serif;
   background: #080b18;
   color: white;
   min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
 }
 
 header {
@@ -415,29 +422,48 @@ footer {
   padding: 0 15px 10px;
 }
 
-@media(max-width:650px) {
-  header {
-    padding: 18px 5%;
-    flex-direction: column;
-    gap: 15px;
-  }
+/* GEMENSAM MOBILANPASSNING */
 
-  nav {
-    gap: 14px;
-    flex-wrap: wrap;
-    justify-content: center;
+button,
+input,
+textarea,
+select {
+  font-size: 16px;
+}
+
+button {
+  touch-action: manipulation;
+}
+
+.tool-card,
+.tab,
+.action-btn,
+.new-chat-btn,
+.chat-history-btn {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* SURFPLATTOR */
+
+@media (max-width: 850px) {
+  header {
+    padding: 18px 4%;
   }
 
   section {
-    padding: 40px 5%;
+    padding: 45px 4%;
   }
 
   .studio {
-    padding: 17px;
+    padding: 20px;
   }
 
   .chat-layout {
     grid-template-columns: 1fr;
+  }
+
+  .chat-sidebar {
+    width: 100%;
   }
 
   .chat-list {
@@ -446,11 +472,239 @@ footer {
   }
 
   .chat-history-btn {
-    min-width: 120px;
+    flex: 0 0 auto;
+    max-width: 180px;
+  }
+}
+
+/* MOBIL */
+
+@media (max-width: 650px) {
+  header {
+    position: relative;
+    flex-direction: column;
+    gap: 15px;
+    padding: 18px 15px;
+  }
+
+  .logo {
+    font-size: 27px;
+  }
+
+  nav {
+    width: 100%;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  nav a {
+    font-size: 14px;
+    padding: 5px 0;
+  }
+
+  .hero {
+    padding: 65px 18px 55px;
+  }
+
+  .hero h1 {
+    font-size: clamp(36px, 10vw, 48px);
+  }
+
+  .hero p {
+    font-size: 15px;
+  }
+
+  .primary-btn {
+    width: 100%;
+    max-width: 280px;
+    padding: 16px;
+  }
+
+  section {
+    padding: 38px 15px;
+  }
+
+  .section-title h2 {
+    font-size: 25px;
+  }
+
+  .section-title p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+    gap: 13px;
+  }
+
+  .tool-card {
+    padding: 21px;
+  }
+
+  .tool-card:hover {
+    transform: none;
+  }
+
+  .studio {
+    padding: 13px;
+    border-radius: 13px;
+  }
+
+  .tabs {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 8px;
+    padding-bottom: 10px;
+    scrollbar-width: thin;
+  }
+
+  .tab {
+    flex: 0 0 auto;
+    padding: 12px 15px;
+  }
+
+  .panel h2 {
+    font-size: 22px;
+  }
+
+  .panel > p {
+    font-size: 14px;
+  }
+
+  input,
+  textarea,
+  select {
+    padding: 14px;
+    border-radius: 9px;
+  }
+
+  .action-btn {
+    width: 100%;
+    min-height: 46px;
+    padding: 13px;
+  }
+
+  .output {
+    padding: 14px;
+    font-size: 14px;
+  }
+
+  .image-preview {
+    padding: 6px;
+  }
+
+  .image-preview canvas {
+    width: 100%;
+    height: auto;
+  }
+
+  /* CHAT */
+
+  .chat-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 0;
+  }
+
+  .chat-sidebar {
+    padding: 10px;
+  }
+
+  .new-chat-btn {
+    min-height: 46px;
+    margin-bottom: 10px;
+  }
+
+  .chat-list {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+  }
+
+  .chat-history-btn {
+    min-width: 125px;
+    max-width: 180px;
+    padding: 12px;
+  }
+
+  .chat-main {
+    min-height: 480px;
+    width: 100%;
+  }
+
+  .chat-messages {
+    min-height: 350px;
+    max-height: 55vh;
+    padding: 13px;
+    gap: 12px;
   }
 
   .chat-message {
-    max-width: 95%;
+    max-width: 92%;
+    padding: 12px 14px;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  .chat-input-area {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .chat-input-area textarea {
+    min-height: 48px;
+    max-height: 110px;
+    font-size: 16px;
+  }
+
+  .chat-input-area button {
+    min-height: 48px;
+    padding: 12px;
+  }
+
+  .chat-status {
+    font-size: 11px;
+    padding: 0 10px 10px;
+  }
+
+  footer {
+    font-size: 13px;
+    padding: 28px 15px;
+  }
+}
+
+/* EXTRA SMÅ MOBILER */
+
+@media (max-width: 400px) {
+  nav {
+    gap: 13px;
+  }
+
+  .hero h1 {
+    font-size: 35px;
+  }
+
+  .studio {
+    padding: 9px;
+  }
+
+  .chat-input-area {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .chat-input-area button {
+    width: 100%;
+  }
+
+  .chat-messages {
+    max-height: 50vh;
   }
 }
 </style>
