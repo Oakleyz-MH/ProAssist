@@ -6,8 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>ProAssist AI – Gratis AI för skola och kreativitet</title>
-<meta name="description" content="ProAssist AI är en gratis AI-plattform för skolarbete, AI-chat, bilder och kreativt skapande. Spara tidigare chattar och fortsätt dina konversationer med hjälp av chatthistorik.">
-<meta name="keywords" content="ProAssist AI, ProAssist, gratis AI, AI för skola, AI chatt, skolhjälp, AI bilder, kreativitet">
+<meta name="description" content="ProAssist AI är en gratis AI-plattform för skolarbete, AI-chat, bilder och kreativt skapande.">
+<meta name="keywords" content="ProAssist AI, ProAssist, gratis AI, AI för skola, AI chatt, skolhjälp, AI bilder">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://oakleyz-mh.github.io/ProAssist/">
 
@@ -15,6 +15,9 @@
 <meta property="og:description" content="Chatta med AI, få hjälp med skolarbete och skapa nya idéer med ProAssist AI.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://oakleyz-mh.github.io/ProAssist/">
+
+<!-- SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 * {
@@ -47,6 +50,8 @@ header {
   position: sticky;
   top: 0;
   z-index: 10;
+  flex-wrap: wrap;
+  gap: 15px;
 }
 
 .logo {
@@ -71,6 +76,24 @@ nav a {
 
 nav a:hover {
   color: white;
+}
+
+.auth-area {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.auth-area button {
+  margin: 0;
+  padding: 10px 15px;
+}
+
+#userInfo {
+  color: #c6c9df;
+  font-size: 13px;
+  overflow-wrap: anywhere;
 }
 
 .hero {
@@ -448,8 +471,6 @@ footer {
   padding: 0 15px 10px;
 }
 
-/* CHAT STARTMENY */
-
 .chat-home {
   padding: 20px;
 }
@@ -537,7 +558,41 @@ footer {
   border-radius: 8px;
 }
 
-/* MOBIL */
+/* SPRÅKVÄLJARE */
+
+.language-section {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.language-section label {
+  margin: 0;
+  color: #aeb3cc;
+}
+
+.language-section select {
+  width: 280px;
+  max-width: 100%;
+  cursor: pointer;
+  background: #11162b;
+  border: 1px solid #7656ec;
+  text-align: center;
+}
+
+#google_translate_element {
+  display: none;
+}
+
+.goog-te-banner-frame.skiptranslate {
+  display: none !important;
+}
+
+body {
+  top: 0 !important;
+}
 
 button,
 input,
@@ -612,6 +667,15 @@ button {
   nav a {
     font-size: 14px;
     padding: 5px 0;
+  }
+
+  .auth-area {
+    justify-content: center;
+    width: 100%;
+  }
+
+  #userInfo {
+    text-align: center;
   }
 
   .hero {
@@ -861,40 +925,9 @@ button {
   direction: ltr;
 }
 
-/* SPRÅKVÄLJARE */
-
-.language-section {
-  margin-top: 25px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-}
-
-.language-section label {
-  margin: 0;
-  color: #aeb3cc;
-}
-
 .language-section select {
   width: 280px;
   max-width: 100%;
-  cursor: pointer;
-  background: #11162b;
-  border: 1px solid #7656ec;
-  text-align: center;
-}
-
-#google_translate_element {
-  display: none;
-}
-
-.goog-te-banner-frame.skiptranslate {
-  display: none !important;
-}
-
-body {
-  top: 0 !important;
 }
 </style>
 </head>
@@ -903,11 +936,25 @@ body {
 
 <header>
   <div class="logo">Pro<span>Assist</span></div>
+
   <nav>
     <a href="#tools">Verktyg</a>
     <a href="#app">AI Studio</a>
     <a href="#about">Om oss</a>
   </nav>
+
+  <!-- GOOGLE LOGIN -->
+  <div class="auth-area">
+    <button class="action-btn" id="loginButton">
+      Logga in med Google
+    </button>
+
+    <span id="userInfo"></span>
+
+    <button class="action-btn" id="logoutButton" style="display:none;">
+      Logga ut
+    </button>
+  </div>
 </header>
 
 <div class="hero">
@@ -1174,6 +1221,30 @@ body {
   </div>
 </section>
 
+<!-- OWNER PANEL -->
+<section id="ownerPanel" style="display:none;">
+  <div class="studio">
+    <h2>👑 ProAssist Owner Panel</h2>
+
+    <p style="color:#aeb3cc;margin-top:12px;line-height:1.7;">
+      Owner-läget är aktivt. Ditt konto har Owner-behörighet.
+    </p>
+
+    <div class="output">
+      <strong>Account:</strong>
+      <span id="ownerEmail"></span>
+
+      <br><br>
+
+      <strong>Role:</strong> Owner
+
+      <br><br>
+
+      <strong>Status:</strong> Inloggad
+    </div>
+  </div>
+</section>
+
 <footer>
   © 2026 ProAssist. Skapa mer. Lär dig mer.
 
@@ -1220,6 +1291,124 @@ body {
 </footer>
 
 <script>
+// ===============================
+// SUPABASE GOOGLE LOGIN
+// ===============================
+
+const SUPABASE_URL = "https://ynntcirurrstglgizdbd.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_Nb_bU1sXSYveYvIiIKdXpA_0jsKDUro";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
+
+let currentUser = null;
+let currentRole = "friend";
+
+const loginButton = document.getElementById("loginButton");
+const logoutButton = document.getElementById("logoutButton");
+const userInfo = document.getElementById("userInfo");
+
+loginButton.addEventListener("click", async () => {
+  loginButton.disabled = true;
+  loginButton.textContent = "Öppnar Google...";
+
+  try {
+    const { error } = await supabaseClient.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: "https://oakleyz-mh.github.io/ProAssist/"
+      }
+    });
+
+    if (error) throw error;
+
+  } catch (error) {
+    alert("Kunde inte logga in: " + error.message);
+    loginButton.disabled = false;
+    loginButton.textContent = "Logga in med Google";
+  }
+});
+
+logoutButton.addEventListener("click", async () => {
+  logoutButton.disabled = true;
+
+  const { error } = await supabaseClient.auth.signOut();
+
+  if (error) {
+    alert("Kunde inte logga ut: " + error.message);
+  }
+
+  logoutButton.disabled = false;
+});
+
+async function updateOwnerPanel() {
+  const panel = document.getElementById("ownerPanel");
+  const ownerEmail = document.getElementById("ownerEmail");
+
+  const isOwner = currentUser && currentRole === "owner";
+
+  panel.style.display = isOwner ? "block" : "none";
+
+  if (isOwner && ownerEmail) {
+    ownerEmail.textContent = currentUser.email || "";
+  }
+}
+
+async function updateLoginStatus() {
+  const { data, error } = await supabaseClient.auth.getUser();
+
+  if (error || !data.user) {
+    currentUser = null;
+    currentRole = "friend";
+
+    loginButton.style.display = "block";
+    loginButton.disabled = false;
+    loginButton.textContent = "Logga in med Google";
+
+    logoutButton.style.display = "none";
+    userInfo.textContent = "";
+
+    await updateOwnerPanel();
+    return;
+  }
+
+  currentUser = data.user;
+
+  const { data: roleData, error: roleError } =
+    await supabaseClient
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", currentUser.id)
+      .maybeSingle();
+
+  if (roleError) {
+    console.error("Kunde inte läsa användarroll:", roleError);
+    currentRole = "friend";
+  } else {
+    currentRole =
+      roleData?.role === "owner" ? "owner" : "friend";
+  }
+
+  loginButton.style.display = "none";
+  logoutButton.style.display = "block";
+
+  userInfo.textContent =
+    (currentUser.email || "Inloggad") +
+    (currentRole === "owner" ? " · Owner 👑" : " · Friend");
+
+  await updateOwnerPanel();
+}
+
+supabaseClient.auth.onAuthStateChange(() => {
+  setTimeout(() => {
+    updateLoginStatus();
+  }, 0);
+});
+
+updateLoginStatus();
+
 // ===============================
 // TABBAR
 // ===============================
