@@ -1,1011 +1,126 @@
+from pathlib import Path
 
-<!DOCTYPE html>
+html = r'''<!DOCTYPE html>
 <html lang="sv">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>ProAssist AI – Gratis AI för skola och kreativitet</title>
 <meta name="description" content="ProAssist AI är en gratis AI-plattform för skolarbete, AI-chat, bilder och kreativt skapande.">
 <meta name="keywords" content="ProAssist AI, ProAssist, gratis AI, AI för skola, AI chatt, skolhjälp, AI bilder">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://oakleyz-mh.github.io/ProAssist/">
-
 <meta property="og:title" content="ProAssist AI – Gratis AI för skola och kreativitet">
 <meta property="og:description" content="Chatta med AI, få hjälp med skolarbete och skapa nya idéer med ProAssist AI.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://oakleyz-mh.github.io/ProAssist/">
-
-<!-- SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-  overflow-x: hidden;
-}
-
-body {
-  font-family: Arial, sans-serif;
-  background: #080b18;
-  color: white;
-  min-height: 100vh;
-  overflow-x: hidden;
-  -webkit-text-size-adjust: 100%;
-}
-
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 22px 7%;
-  border-bottom: 1px solid #252944;
-  background: rgba(10,13,30,.95);
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  flex-wrap: wrap;
-  gap: 15px;
-}
-
-.logo {
-  font-size: 25px;
-  font-weight: bold;
-}
-
-.logo span {
-  color: #9875ff;
-}
-
-nav {
-  display: flex;
-  gap: 25px;
-}
-
-nav a {
-  color: #c6c9df;
-  text-decoration: none;
-  font-size: 14px;
-}
-
-nav a:hover {
-  color: white;
-}
-
-.auth-area {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.auth-area button {
-  margin: 0;
-  padding: 10px 15px;
-}
-
-#userInfo {
-  color: #c6c9df;
-  font-size: 13px;
-  overflow-wrap: anywhere;
-}
-
-.hero {
-  text-align: center;
-  padding: 90px 20px 70px;
-  background: radial-gradient(ellipse at top,#29205b 0%,transparent 65%);
-}
-
-.hero small {
-  color: #a58aff;
-  letter-spacing: 2px;
-  font-weight: bold;
-}
-
-.hero h1 {
-  font-size: clamp(38px,7vw,65px);
-  margin: 20px 0;
-}
-
-.hero h1 span {
-  color: #9a7aff;
-}
-
-.hero p {
-  color: #aeb3cc;
-  max-width: 600px;
-  margin: auto;
-  line-height: 1.7;
-}
-
-.primary-btn {
-  display: inline-block;
-  margin-top: 30px;
-  padding: 14px 28px;
-  background: linear-gradient(90deg,#7554ef,#a05bff);
-  border: none;
-  border-radius: 9px;
-  color: white;
-  font-weight: bold;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-section {
-  padding: 55px 7%;
-}
-
-.section-title {
-  text-align: center;
-  margin-bottom: 35px;
-}
-
-.section-title h2 {
-  font-size: 30px;
-  margin-bottom: 10px;
-}
-
-.section-title p {
-  color: #aeb3cc;
-}
-
-.cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit,minmax(210px,1fr));
-  gap: 18px;
-}
-
-.tool-card {
-  background: #11162b;
-  border: 1px solid #292f50;
-  border-radius: 15px;
-  padding: 25px;
-  cursor: pointer;
-  transition: .2s;
-}
-
-.tool-card:hover {
-  transform: translateY(-5px);
-  border-color: #896bff;
-}
-
-.tool-card .emoji {
-  font-size: 30px;
-  margin-bottom: 15px;
-}
-
-.tool-card h3 {
-  margin-bottom: 10px;
-}
-
-.tool-card p {
-  color: #aeb3cc;
-  font-size: 14px;
-  line-height: 1.6;
-}
-
-.studio {
-  max-width: 1100px;
-  margin: auto;
-  background: #10152a;
-  border: 1px solid #292f50;
-  border-radius: 18px;
-  padding: 25px;
-}
-
-.tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 25px;
-}
-
-.tab {
-  padding: 11px 18px;
-  border: 1px solid #343b60;
-  border-radius: 8px;
-  background: #171d35;
-  color: #c4c9df;
-  cursor: pointer;
-}
-
-.tab.active {
-  background: #7656ec;
-  border-color: #7656ec;
-  color: white;
-}
-
-.panel {
-  display: none;
-}
-
-.panel.active {
-  display: block;
-}
-
-.panel h2 {
-  margin-bottom: 10px;
-}
-
-.panel > p {
-  color: #aeb3cc;
-  margin-bottom: 20px;
-  line-height: 1.6;
-}
-
-label {
-  display: block;
-  margin: 15px 0 8px;
-  color: #d8daf0;
-  font-size: 14px;
-}
-
-input,textarea,select {
-  width: 100%;
-  padding: 13px;
-  background: #090e20;
-  color: white;
-  border: 1px solid #343b60;
-  border-radius: 8px;
-  outline: none;
-  font-family: Arial,sans-serif;
-}
-
-input:focus,textarea:focus,select:focus {
-  border-color: #9676ff;
-}
-
-textarea {
-  min-height: 110px;
-  resize: vertical;
-}
-
-select option {
-  background: #10152a;
-}
-
-.action-btn {
-  margin-top: 15px;
-  padding: 13px 22px;
-  background: linear-gradient(90deg,#7656ec,#a05bff);
-  border: none;
-  border-radius: 8px;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.action-btn:hover {
-  opacity: .9;
-}
-
-.action-btn:disabled {
-  opacity: .5;
-  cursor: not-allowed;
-}
-
-.output {
-  margin-top: 20px;
-  padding: 18px;
-  background: #090e20;
-  border: 1px solid #343b60;
-  border-radius: 9px;
-  color: #d8daf0;
-  white-space: pre-wrap;
-  line-height: 1.6;
-  min-height: 50px;
-  overflow-wrap: anywhere;
-}
-
-.image-preview {
-  margin-top: 20px;
-  padding: 10px;
-  background: #090e20;
-  border: 1px solid #343b60;
-  border-radius: 10px;
-}
-
-.image-preview canvas {
-  display: block;
-  width: 100%;
-  height: auto;
-  border-radius: 6px;
-}
-
-.note {
-  color: #aeb3cc;
-  font-size: 13px;
-  margin-top: 12px;
-  line-height: 1.5;
-}
-
-footer {
-  text-align: center;
-  padding: 35px 15px;
-  color: #858ba8;
-  border-top: 1px solid #252944;
-  margin-top: 50px;
-}
-
-/* CHAT */
-
-.chat-layout {
-  display: grid;
-  grid-template-columns: 210px minmax(0, 1fr);
-  gap: 15px;
-  min-height: 520px;
-  width: 100%;
-  min-width: 0;
-}
-
-.chat-sidebar {
-  background: #090e20;
-  border: 1px solid #343b60;
-  border-radius: 12px;
-  padding: 12px;
-  min-width: 0;
-}
-
-.new-chat-btn {
-  width: 100%;
-  padding: 12px;
-  background: #7656ec;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-  margin-bottom: 15px;
-}
-
-.chat-list {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-}
-
-.chat-history-btn {
-  background: #171d35;
-  color: #d8daf0;
-  border: 1px solid transparent;
-  border-radius: 7px;
-  padding: 10px;
-  text-align: left;
-  cursor: pointer;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.chat-history-btn.active {
-  border-color: #896bff;
-  background: #252044;
-}
-
-.chat-main {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  width: 100%;
-  background: #090e20;
-  border: 1px solid #343b60;
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.chat-messages {
-  flex: 1;
-  min-height: 350px;
-  max-height: 500px;
-  overflow-y: auto;
-  padding: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  min-width: 0;
-}
-
-.chat-message {
-  max-width: 85%;
-  padding: 13px 16px;
-  border-radius: 13px;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-  line-height: 1.6;
-}
-
-.chat-message.user {
-  align-self: flex-end;
-  background: #7656ec;
-  color: white;
-  border-bottom-right-radius: 3px;
-}
-
-.chat-message.assistant {
-  align-self: flex-start;
-  background: #171d35;
-  color: #e3e5f5;
-  border-bottom-left-radius: 3px;
-}
-
-.chat-input-area {
-  border-top: 1px solid #343b60;
-  padding: 14px;
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-  align-items: flex-end;
-  width: 100%;
-  min-width: 0;
-}
-
-.chat-input-area textarea {
-  min-height: 50px;
-  max-height: 130px;
-  resize: vertical;
-  flex: 1 1 0;
-  width: 0;
-  min-width: 0;
-  max-width: 100%;
-  display: block;
-  white-space: pre-wrap;
-  word-break: normal;
-  overflow-wrap: normal;
-}
-
-.chat-input-area button {
-  margin: 0;
-  white-space: nowrap;
-  flex: 0 0 auto;
-}
-
-.chat-status {
-  color: #aeb3cc;
-  font-size: 12px;
-  padding: 0 15px 10px;
-}
-
-.chat-home {
-  padding: 20px;
-}
-
-.chat-home h2 {
-  font-size: 25px;
-  margin-bottom: 10px;
-}
-
-.chat-home > p {
-  color: #aeb3cc;
-  margin-bottom: 25px;
-  line-height: 1.6;
-}
-
-.chat-options {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 14px;
-}
-
-.chat-option {
-  background: #171d35;
-  border: 1px solid #343b60;
-  border-radius: 13px;
-  padding: 22px;
-  color: white;
-  text-align: left;
-  cursor: pointer;
-  transition: .2s;
-  min-height: 135px;
-}
-
-.chat-option:hover {
-  border-color: #9875ff;
-  transform: translateY(-3px);
-  background: #202044;
-}
-
-.chat-option .option-icon {
-  font-size: 30px;
-  margin-bottom: 12px;
-}
-
-.chat-option h3 {
-  margin-bottom: 7px;
-}
-
-.chat-option p {
-  color: #aeb3cc;
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-.chat-topbar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px;
-  border-bottom: 1px solid #343b60;
-}
-
-.back-chat-btn {
-  background: #252044;
-  border: 1px solid #504477;
-  color: white;
-  padding: 9px 13px;
-  border-radius: 7px;
-  cursor: pointer;
-}
-
-.chat-mode-title {
-  font-weight: bold;
-  color: #d8daf0;
-}
-
-.memory-note {
-  color: #aeb3cc;
-  font-size: 12px;
-  line-height: 1.5;
-  margin-top: 18px;
-  padding: 12px;
-  background: #171d35;
-  border: 1px solid #343b60;
-  border-radius: 8px;
-}
-
-/* SPRÅKVÄLJARE */
-
-.language-section {
-  margin-top: 25px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-}
-
-.language-section label {
-  margin: 0;
-  color: #aeb3cc;
-}
-
-.language-section select {
-  width: 280px;
-  max-width: 100%;
-  cursor: pointer;
-  background: #11162b;
-  border: 1px solid #7656ec;
-  text-align: center;
-}
-
-#google_translate_element {
-  display: none;
-}
-
-.goog-te-banner-frame.skiptranslate {
-  display: none !important;
-}
-
-body {
-  top: 0 !important;
-}
-
-button,
-input,
-textarea,
-select {
-  font-size: 16px;
-}
-
-button {
-  touch-action: manipulation;
-}
-
-.tool-card,
-.tab,
-.action-btn,
-.new-chat-btn,
-.chat-history-btn {
-  -webkit-tap-highlight-color: transparent;
-}
-
-@media (max-width: 850px) {
-  header {
-    padding: 18px 4%;
-  }
-
-  section {
-    padding: 45px 4%;
-  }
-
-  .studio {
-    padding: 20px;
-  }
-
-  .chat-layout {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .chat-sidebar {
-    width: 100%;
-  }
-
-  .chat-list {
-    flex-direction: row;
-    overflow-x: auto;
-  }
-
-  .chat-history-btn {
-    flex: 0 0 auto;
-    max-width: 180px;
-  }
-}
-
-@media (max-width: 650px) {
-  header {
-    position: relative;
-    flex-direction: column;
-    gap: 15px;
-    padding: 18px 15px;
-  }
-
-  .logo {
-    font-size: 27px;
-  }
-
-  nav {
-    width: 100%;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
-  }
-
-  nav a {
-    font-size: 14px;
-    padding: 5px 0;
-  }
-
-  .auth-area {
-    justify-content: center;
-    width: 100%;
-  }
-
-  #userInfo {
-    text-align: center;
-  }
-
-  .hero {
-    padding: 65px 18px 55px;
-  }
-
-  .hero h1 {
-    font-size: clamp(36px, 10vw, 48px);
-  }
-
-  .hero p {
-    font-size: 15px;
-  }
-
-  .primary-btn {
-    width: 100%;
-    max-width: 280px;
-    padding: 16px;
-  }
-
-  section {
-    padding: 38px 15px;
-  }
-
-  .section-title h2 {
-    font-size: 25px;
-  }
-
-  .section-title p {
-    font-size: 14px;
-    line-height: 1.6;
-  }
-
-  .cards {
-    grid-template-columns: 1fr;
-    gap: 13px;
-  }
-
-  .tool-card {
-    padding: 21px;
-  }
-
-  .tool-card:hover {
-    transform: none;
-  }
-
-  .studio {
-    padding: 13px;
-    border-radius: 13px;
-  }
-
-  .tabs {
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    gap: 8px;
-    padding-bottom: 10px;
-    scrollbar-width: thin;
-  }
-
-  .tab {
-    flex: 0 0 auto;
-    padding: 12px 15px;
-  }
-
-  .panel h2 {
-    font-size: 22px;
-  }
-
-  .panel > p {
-    font-size: 14px;
-  }
-
-  input,
-  textarea,
-  select {
-    padding: 14px;
-    border-radius: 9px;
-  }
-
-  .action-btn {
-    width: 100%;
-    min-height: 46px;
-    padding: 13px;
-  }
-
-  .output {
-    padding: 14px;
-    font-size: 14px;
-  }
-
-  .image-preview {
-    padding: 6px;
-  }
-
-  .image-preview canvas {
-    width: 100%;
-    height: auto;
-  }
-
-  .chat-layout {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    min-height: 0;
-    width: 100%;
-    min-width: 0;
-  }
-
-  .chat-sidebar {
-    padding: 10px;
-  }
-
-  .new-chat-btn {
-    min-height: 46px;
-    margin-bottom: 10px;
-  }
-
-  .chat-list {
-    display: flex;
-    flex-direction: row;
-    gap: 8px;
-    overflow-x: auto;
-    padding-bottom: 5px;
-  }
-
-  .chat-history-btn {
-    min-width: 125px;
-    max-width: 180px;
-    padding: 12px;
-  }
-
-  .chat-main {
-    min-height: 480px;
-    width: 100%;
-    min-width: 0;
-  }
-
-  .chat-messages {
-    min-height: 350px;
-    max-height: 55vh;
-    padding: 13px;
-    gap: 12px;
-  }
-
-  .chat-message {
-    max-width: 92%;
-    padding: 12px 14px;
-    font-size: 15px;
-    line-height: 1.55;
-  }
-
-  .chat-input-area {
-    padding: 10px;
-    gap: 8px;
-    flex-direction: row;
-    align-items: stretch;
-    width: 100%;
-    min-width: 0;
-  }
-
-  .chat-input-area textarea {
-    min-height: 48px;
-    max-height: 110px;
-    font-size: 16px;
-    width: 0;
-    min-width: 0;
-    flex: 1 1 0;
-  }
-
-  .chat-input-area button {
-    min-height: 48px;
-    padding: 12px;
-    width: auto;
-    flex: 0 0 auto;
-  }
-
-  .chat-status {
-    font-size: 11px;
-    padding: 0 10px 10px;
-  }
-
-  .chat-home {
-    padding: 12px;
-  }
-
-  .chat-options {
-    grid-template-columns: 1fr;
-  }
-
-  .chat-option {
-    min-height: 110px;
-  }
-
-  footer {
-    font-size: 13px;
-    padding: 28px 15px;
-  }
-}
-
-@media (max-width: 400px) {
-  nav {
-    gap: 13px;
-  }
-
-  .hero h1 {
-    font-size: 35px;
-  }
-
-  .studio {
-    padding: 9px;
-  }
-
-  .chat-input-area {
-    flex-direction: row;
-    align-items: stretch;
-  }
-
-  .chat-input-area textarea {
-    width: 0;
-    min-width: 0;
-    flex: 1 1 0;
-  }
-
-  .chat-input-area button {
-    width: auto;
-  }
-
-  .chat-messages {
-    max-height: 50vh;
-  }
-}
-
-.chat-layout,
-.chat-main,
-.chat-input-area {
-  min-width: 0;
-  max-width: 100%;
-}
-
-.chat-input-area textarea {
-  box-sizing: border-box;
-  white-space: pre-wrap;
-  overflow-wrap: normal;
-  word-break: normal;
-  writing-mode: horizontal-tb;
-  direction: ltr;
-}
-
-.language-section select {
-  width: 280px;
-  max-width: 100%;
-}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{font-family:Arial,sans-serif;background:#080b18;color:white;min-height:100vh;overflow-x:hidden;-webkit-text-size-adjust:100%;top:0!important}
+header{display:flex;justify-content:space-between;align-items:center;padding:22px 7%;border-bottom:1px solid #252944;background:rgba(10,13,30,.95);position:sticky;top:0;z-index:10;flex-wrap:wrap;gap:15px}
+.logo{font-size:25px;font-weight:bold}.logo span{color:#9875ff}
+nav{display:flex;gap:25px}nav a{color:#c6c9df;text-decoration:none;font-size:14px}nav a:hover{color:white}
+.auth-area{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.auth-area button{margin:0;padding:10px 15px}#userInfo{color:#c6c9df;font-size:13px;overflow-wrap:anywhere}
+.hero{text-align:center;padding:90px 20px 70px;background:radial-gradient(ellipse at top,#29205b 0%,transparent 65%)}
+.hero small{color:#a58aff;letter-spacing:2px;font-weight:bold}.hero h1{font-size:clamp(38px,7vw,65px);margin:20px 0}.hero h1 span{color:#9a7aff}
+.hero p{color:#aeb3cc;max-width:600px;margin:auto;line-height:1.7}
+.primary-btn{display:inline-block;margin-top:30px;padding:14px 28px;background:linear-gradient(90deg,#7554ef,#a05bff);border:0;border-radius:9px;color:white;font-weight:bold;text-decoration:none;cursor:pointer}
+section{padding:55px 7%}.section-title{text-align:center;margin-bottom:35px}.section-title h2{font-size:30px;margin-bottom:10px}.section-title p{color:#aeb3cc}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px}
+.tool-card{background:#11162b;border:1px solid #292f50;border-radius:15px;padding:25px;cursor:pointer;transition:.2s}
+.tool-card:hover{transform:translateY(-5px);border-color:#896bff}.tool-card .emoji{font-size:30px;margin-bottom:15px}.tool-card h3{margin-bottom:10px}
+.tool-card p{color:#aeb3cc;font-size:14px;line-height:1.6}
+.studio{max-width:1100px;margin:auto;background:#10152a;border:1px solid #292f50;border-radius:18px;padding:25px}
+.tabs{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:25px}
+.tab{padding:11px 18px;border:1px solid #343b60;border-radius:8px;background:#171d35;color:#c4c9df;cursor:pointer}
+.tab.active{background:#7656ec;border-color:#7656ec;color:white}
+.panel{display:none}.panel.active{display:block}.panel h2{margin-bottom:10px}.panel>p{color:#aeb3cc;margin-bottom:20px;line-height:1.6}
+label{display:block;margin:15px 0 8px;color:#d8daf0;font-size:14px}
+input,textarea,select{width:100%;padding:13px;background:#090e20;color:white;border:1px solid #343b60;border-radius:8px;outline:none;font-family:Arial,sans-serif;font-size:16px}
+input:focus,textarea:focus,select:focus{border-color:#9676ff}textarea{min-height:110px;resize:vertical}select option{background:#10152a}
+.action-btn{margin-top:15px;padding:13px 22px;background:linear-gradient(90deg,#7656ec,#a05bff);border:0;border-radius:8px;color:white;font-weight:bold;cursor:pointer}
+.action-btn:hover{opacity:.9}.action-btn:disabled{opacity:.5;cursor:not-allowed}
+.output{margin-top:20px;padding:18px;background:#090e20;border:1px solid #343b60;border-radius:9px;color:#d8daf0;white-space:pre-wrap;line-height:1.6;min-height:50px;overflow-wrap:anywhere}
+.image-preview{margin-top:20px;padding:10px;background:#090e20;border:1px solid #343b60;border-radius:10px}.image-preview canvas{display:block;width:100%;height:auto;border-radius:6px}
+.note{color:#aeb3cc;font-size:13px;margin-top:12px;line-height:1.5}
+footer{text-align:center;padding:35px 15px;color:#858ba8;border-top:1px solid #252944;margin-top:50px}
+.chat-layout{display:grid;grid-template-columns:210px minmax(0,1fr);gap:15px;min-height:520px;width:100%;min-width:0}
+.chat-sidebar{background:#090e20;border:1px solid #343b60;border-radius:12px;padding:12px;min-width:0}
+.new-chat-btn{width:100%;padding:12px;background:#7656ec;color:white;border:0;border-radius:8px;cursor:pointer;font-weight:bold;margin-bottom:15px}
+.chat-list{display:flex;flex-direction:column;gap:7px}
+.chat-history-btn{background:#171d35;color:#d8daf0;border:1px solid transparent;border-radius:7px;padding:10px;text-align:left;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chat-history-btn.active{border-color:#896bff;background:#252044}
+.chat-main{display:flex;flex-direction:column;min-width:0;width:100%;background:#090e20;border:1px solid #343b60;border-radius:12px;overflow:hidden}
+.chat-messages{flex:1;min-height:350px;max-height:500px;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:15px;min-width:0}
+.chat-message{max-width:85%;padding:13px 16px;border-radius:13px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.6}
+.chat-message.user{align-self:flex-end;background:#7656ec;color:white;border-bottom-right-radius:3px}
+.chat-message.assistant{align-self:flex-start;background:#171d35;color:#e3e5f5;border-bottom-left-radius:3px}
+.chat-input-area{border-top:1px solid #343b60;padding:14px;display:flex;gap:10px;align-items:flex-end;width:100%;min-width:0}
+.chat-input-area textarea{min-height:50px;max-height:130px;resize:vertical;flex:1 1 0;width:0;min-width:0;max-width:100%;display:block}
+.chat-input-area button{margin:0;white-space:nowrap;flex:0 0 auto}
+.chat-status{color:#aeb3cc;font-size:12px;padding:0 15px 10px}
+.chat-home{padding:20px}.chat-home h2{font-size:25px;margin-bottom:10px}.chat-home>p{color:#aeb3cc;margin-bottom:25px;line-height:1.6}
+.chat-options{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.chat-option{background:#171d35;border:1px solid #343b60;border-radius:13px;padding:22px;color:white;text-align:left;cursor:pointer;transition:.2s;min-height:135px}
+.chat-option:hover{border-color:#9875ff;transform:translateY(-3px);background:#202044}
+.chat-option .option-icon{font-size:30px;margin-bottom:12px}.chat-option h3{margin-bottom:7px}
+.chat-option p{color:#aeb3cc;font-size:13px;line-height:1.5}
+.chat-topbar{display:flex;align-items:center;gap:10px;padding:12px;border-bottom:1px solid #343b60}
+.back-chat-btn{background:#252044;border:1px solid #504477;color:white;padding:9px 13px;border-radius:7px;cursor:pointer}
+.chat-mode-title{font-weight:bold;color:#d8daf0}
+.memory-note{color:#aeb3cc;font-size:12px;line-height:1.5;margin-top:18px;padding:12px;background:#171d35;border:1px solid #343b60;border-radius:8px}
+.language-section{margin-top:25px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.language-section label{margin:0;color:#aeb3cc}.language-section select{width:280px;max-width:100%;cursor:pointer;background:#11162b;border:1px solid #7656ec;text-align:center}
+#google_translate_element{display:none}.goog-te-banner-frame.skiptranslate{display:none!important}
+button{touch-action:manipulation;font-size:16px}
+.tool-card,.tab,.action-btn,.new-chat-btn,.chat-history-btn{-webkit-tap-highlight-color:transparent}
+@media(max-width:850px){header{padding:18px 4%}section{padding:45px 4%}.studio{padding:20px}.chat-layout{grid-template-columns:minmax(0,1fr)}.chat-sidebar{width:100%}.chat-list{flex-direction:row;overflow-x:auto}.chat-history-btn{flex:0 0 auto;max-width:180px}}
+@media(max-width:650px){header{position:relative;flex-direction:column;gap:15px;padding:18px 15px}.logo{font-size:27px}nav{width:100%;justify-content:center;gap:20px;flex-wrap:wrap}nav a{font-size:14px;padding:5px 0}.auth-area{justify-content:center;width:100%}#userInfo{text-align:center}
+.hero{padding:65px 18px 55px}.hero h1{font-size:clamp(36px,10vw,48px)}.hero p{font-size:15px}.primary-btn{width:100%;max-width:280px;padding:16px}
+section{padding:38px 15px}.section-title h2{font-size:25px}.section-title p{font-size:14px;line-height:1.6}.cards{grid-template-columns:1fr;gap:13px}.tool-card{padding:21px}.tool-card:hover{transform:none}
+.studio{padding:13px;border-radius:13px}.tabs{flex-wrap:nowrap;overflow-x:auto;gap:8px;padding-bottom:10px}.tab{flex:0 0 auto;padding:12px 15px}
+.panel h2{font-size:22px}.panel>p{font-size:14px}input,textarea,select{padding:14px;border-radius:9px}.action-btn{width:100%;min-height:46px;padding:13px}.output{padding:14px;font-size:14px}
+.chat-layout{display:flex;flex-direction:column;gap:10px;min-height:0}.chat-sidebar{padding:10px}.new-chat-btn{min-height:46px;margin-bottom:10px}.chat-list{display:flex;flex-direction:row;gap:8px;overflow-x:auto;padding-bottom:5px}
+.chat-history-btn{min-width:125px;max-width:180px;padding:12px}.chat-main{min-height:480px}.chat-messages{min-height:350px;max-height:55vh;padding:13px;gap:12px}.chat-message{max-width:92%;padding:12px 14px;font-size:15px}
+.chat-input-area{padding:10px;gap:8px;flex-direction:row;align-items:stretch}.chat-input-area textarea{min-height:48px;max-height:110px;font-size:16px;width:0;min-width:0;flex:1 1 0}.chat-input-area button{min-height:48px;padding:12px;width:auto;flex:0 0 auto}
+.chat-status{font-size:11px;padding:0 10px 10px}.chat-home{padding:12px}.chat-options{grid-template-columns:1fr}.chat-option{min-height:110px}footer{font-size:13px;padding:28px 15px}}
+@media(max-width:400px){nav{gap:13px}.hero h1{font-size:35px}.studio{padding:9px}.chat-input-area{flex-direction:row}.chat-input-area textarea{width:0;min-width:0;flex:1 1 0}.chat-input-area button{width:auto}.chat-messages{max-height:50vh}}
+.chat-layout,.chat-main,.chat-input-area{min-width:0;max-width:100%}
+.chat-input-area textarea{box-sizing:border-box;white-space:pre-wrap;overflow-wrap:normal;word-break:normal;writing-mode:horizontal-tb;direction:ltr}
 </style>
 </head>
-
 <body>
-
 <header>
   <div class="logo">Pro<span>Assist</span></div>
-
-  <nav>
-    <a href="#tools">Verktyg</a>
-    <a href="#app">AI Studio</a>
-    <a href="#about">Om oss</a>
-  </nav>
-
-  <!-- GOOGLE LOGIN -->
+  <nav><a href="#tools">Verktyg</a><a href="#app">AI Studio</a><a href="#about">Om oss</a></nav>
   <div class="auth-area">
-    <button class="action-btn" id="loginButton">
-      Logga in med Google
-    </button>
-
+    <button class="action-btn" id="loginButton">Logga in med Google</button>
     <span id="userInfo"></span>
-
-    <button class="action-btn" id="logoutButton" style="display:none;">
-      Logga ut
-    </button>
+    <button class="action-btn" id="logoutButton" style="display:none">Logga ut</button>
   </div>
 </header>
 
 <div class="hero">
   <small>✦ AI FÖR SKOLA OCH SKAPANDE</small>
   <h1>Skapa mer.<br><span>Lär dig mer.</span></h1>
-  <p>
-    Välkommen till ProAssist – en enkel plats där du kan få
-    hjälp med skolarbete, utveckla kreativa idéer och chatta med AI.
-  </p>
+  <p>Välkommen till ProAssist – en enkel plats där du kan få hjälp med skolarbete, utveckla kreativa idéer och chatta med AI.</p>
   <a href="#app" class="primary-btn">Starta ProAssist</a>
 </div>
 
 <section id="tools">
-  <div class="section-title">
-    <h2>Vad vill du göra idag?</h2>
-    <p>Välj ett verktyg och börja skapa.</p>
-  </div>
-
+  <div class="section-title"><h2>Vad vill du göra idag?</h2><p>Välj ett verktyg och börja skapa.</p></div>
   <div class="cards">
-    <div class="tool-card" onclick="openTab('images')">
-      <div class="emoji">🎨</div>
-      <h3>AI Bilder</h3>
-      <p>Skapa grafiska bilder och ladda ner dem.</p>
-    </div>
-
-    <div class="tool-card" onclick="openTab('video')">
-      <div class="emoji">🎬</div>
-      <h3>AI Video</h3>
-      <p>Skapa idéer och prompts för videor.</p>
-    </div>
-
-    <div class="tool-card" onclick="openTab('school')">
-      <div class="emoji">📚</div>
-      <h3>Skolhjälp</h3>
-      <p>Få hjälp med läxor och skoluppgifter.</p>
-    </div>
-
-    <div class="tool-card" onclick="openTab('chat')">
-      <div class="emoji">🤖</div>
-      <h3>AI Chat</h3>
-      <p>Ställ frågor och få svar från ProAssist.</p>
-    </div>
+    <div class="tool-card" onclick="openTab('images')"><div class="emoji">🎨</div><h3>AI Bilder</h3><p>Skapa grafiska bilder och ladda ner dem.</p></div>
+    <div class="tool-card" onclick="openTab('video')"><div class="emoji">🎬</div><h3>AI Video</h3><p>Skapa idéer och prompts för videor.</p></div>
+    <div class="tool-card" onclick="openTab('school')"><div class="emoji">📚</div><h3>Skolhjälp</h3><p>Få hjälp med läxor och skoluppgifter.</p></div>
+    <div class="tool-card" onclick="openTab('chat')"><div class="emoji">🤖</div><h3>AI Chat</h3><p>Ställ frågor och få svar från ProAssist.</p></div>
   </div>
 </section>
 
 <section id="app">
-  <div class="section-title">
-    <h2>ProAssist Studio</h2>
-    <p>Dina kreativa AI-verktyg på ett ställe.</p>
-  </div>
-
+  <div class="section-title"><h2>ProAssist Studio</h2><p>Dina kreativa AI-verktyg på ett ställe.</p></div>
   <div class="studio">
     <div class="tabs">
       <button class="tab active" data-tab="chat">AI Chat</button>
@@ -1015,315 +130,118 @@ button {
     </div>
 
     <div class="panel active" id="panel-chat">
-
       <div id="chatHome" class="chat-home">
         <h2>🤖 Välkommen till ProAssist AI</h2>
-        <p>
-          Vad vill du ha hjälp med idag?
-          Välj ett alternativ för att börja chatta.
-        </p>
-
+        <p>Vad vill du ha hjälp med idag? Välj ett alternativ för att börja chatta.</p>
         <div class="chat-options">
-
-          <button class="chat-option" onclick="startChatMode('general')">
-            <div class="option-icon">💬</div>
-            <h3>Vanlig AI-chatt</h3>
-            <p>Ställ frågor och prata om vad du vill.</p>
-          </button>
-
-          <button class="chat-option" onclick="startChatMode('school')">
-            <div class="option-icon">📚</div>
-            <h3>Skolhjälp</h3>
-            <p>Få hjälp med läxor och förstå skolämnen.</p>
-          </button>
-
-          <button class="chat-option" onclick="startChatMode('creative')">
-            <div class="option-icon">💡</div>
-            <h3>Idéer och kreativitet</h3>
-            <p>Skapa idéer, berättelser och nya projekt.</p>
-          </button>
-
-          <button class="chat-option" onclick="startChatMode('knowledge')">
-            <div class="option-icon">🌍</div>
-            <h3>Allmän kunskap</h3>
-            <p>Lär dig om världen, vetenskap, historia och mer.</p>
-          </button>
-
-          <button class="chat-option" onclick="startChatMode('writing')">
-            <div class="option-icon">✍️</div>
-            <h3>Skrivhjälp</h3>
-            <p>Få hjälp med texter, stavning och formuleringar.</p>
-          </button>
-
+          <button class="chat-option" onclick="startChatMode('general')"><div class="option-icon">💬</div><h3>Vanlig AI-chatt</h3><p>Ställ frågor och prata om vad du vill.</p></button>
+          <button class="chat-option" onclick="startChatMode('school')"><div class="option-icon">📚</div><h3>Skolhjälp</h3><p>Få hjälp med läxor och förstå skolämnen.</p></button>
+          <button class="chat-option" onclick="startChatMode('creative')"><div class="option-icon">💡</div><h3>Idéer och kreativitet</h3><p>Skapa idéer, berättelser och nya projekt.</p></button>
+          <button class="chat-option" onclick="startChatMode('knowledge')"><div class="option-icon">🌍</div><h3>Allmän kunskap</h3><p>Lär dig om världen, vetenskap, historia och mer.</p></button>
+          <button class="chat-option" onclick="startChatMode('writing')"><div class="option-icon">✍️</div><h3>Skrivhjälp</h3><p>Få hjälp med texter, stavning och formuleringar.</p></button>
         </div>
-
-        <div style="margin-top:30px;">
-          <h3 style="margin-bottom:12px;">🕘 Dina tidigare chattar</h3>
-          <div id="chatHomeList" class="chat-list"></div>
-        </div>
-
-        <div class="memory-note">
-          🧠 ProAssist kan använda relevanta delar av dina tidigare
-          chattar som sammanhang när du startar en ny konversation.
-          Chattarna sparas i den här webbläsaren.
-        </div>
+        <div style="margin-top:30px"><h3 style="margin-bottom:12px">🕘 Dina tidigare chattar</h3><div id="chatHomeList" class="chat-list"></div></div>
+        <div class="memory-note">🧠 ProAssist kan använda relevanta delar av dina tidigare chattar som sammanhang när du startar en ny konversation. Chattar sparas separat per konto i den här webbläsaren.</div>
       </div>
-
-      <div id="chatConversation" style="display:none;">
-
-        <div class="chat-topbar">
-          <button class="back-chat-btn" onclick="showChatHome()">
-            ← Tillbaka
-          </button>
-
-          <span class="chat-mode-title" id="chatModeTitle">
-            💬 Vanlig AI-chatt
-          </span>
-        </div>
-
+      <div id="chatConversation" style="display:none">
+        <div class="chat-topbar"><button class="back-chat-btn" onclick="showChatHome()">← Tillbaka</button><span class="chat-mode-title" id="chatModeTitle">💬 Vanlig AI-chatt</span></div>
         <div class="chat-layout">
-          <aside class="chat-sidebar">
-            <button class="new-chat-btn" id="newChat">
-              + Ny chatt
-            </button>
-
-            <div class="chat-list" id="chatList"></div>
-          </aside>
-
+          <aside class="chat-sidebar"><button class="new-chat-btn" id="newChat">+ Ny chatt</button><div class="chat-list" id="chatList"></div></aside>
           <div class="chat-main">
             <div class="chat-messages" id="chatMessages"></div>
-
-            <div class="chat-input-area">
-              <textarea id="chatInput"
-                placeholder="Skriv ett meddelande..."
-                rows="2"></textarea>
-
-              <button class="action-btn" id="sendChat">
-                Skicka
-              </button>
-            </div>
-
-            <div class="chat-status" id="chatStatus">
-              Dina chattar sparas i den här webbläsaren.
-            </div>
+            <div class="chat-input-area"><textarea id="chatInput" placeholder="Skriv ett meddelande..." rows="2"></textarea><button class="action-btn" id="sendChat">Skicka</button></div>
+            <div class="chat-status" id="chatStatus">Dina chattar sparas separat per konto.</div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- AI BILDER -->
-
     <div class="panel" id="panel-images">
-      <h2>🎨 AI Bilder</h2>
-      <p>Skapa en egen grafisk bild direkt i webbläsaren.</p>
-
-      <label for="imageIdea">Vad vill du skapa?</label>
-      <textarea id="imageIdea" placeholder="Exempel: En stad på natten med stjärnor..."></textarea>
-
-      <label for="imageStyle">Välj stil</label>
-      <select id="imageStyle">
-        <option value="Digital konst">Digital konst</option>
-        <option value="Neon">Neon</option>
-        <option value="Minimalistisk">Minimalistisk</option>
-        <option value="Pixel art">Pixel art</option>
-      </select>
-
-      <label for="imageShape">Bildformat</label>
-      <select id="imageShape">
-        <option value="landscape">Liggande (16:9)</option>
-        <option value="portrait">Stående (9:16)</option>
-        <option value="square">Kvadrat (1:1)</option>
-      </select>
-
-      <button class="action-btn" id="generateImageBtn">Skapa bild</button>
-      <button class="action-btn" id="downloadImageBtn" disabled>Ladda ner bild</button>
-
-      <div class="image-preview">
-        <canvas id="imageCanvas" width="960" height="540"></canvas>
-      </div>
-
-      <p class="note">
-        Gratis grafisk bildgenerator. Bilden skapas direkt på din enhet.
-        Den tolkar vissa ord i din beskrivning, men är inte en AI-bildmodell.
-      </p>
+      <h2>🎨 AI Bilder</h2><p>Skapa en egen grafisk bild direkt i webbläsaren.</p>
+      <div id="imageQuota" class="note">Free: 3 bilder per dag. Logga in för att använda bildgeneratorn.</div>
+      <label for="imageIdea">Vad vill du skapa?</label><textarea id="imageIdea" placeholder="Exempel: En stad på natten med stjärnor..."></textarea>
+      <label for="imageStyle">Välj stil</label><select id="imageStyle"><option value="Digital konst">Digital konst</option><option value="Neon">Neon</option><option value="Minimalistisk">Minimalistisk</option><option value="Pixel art">Pixel art</option></select>
+      <label for="imageShape">Bildformat</label><select id="imageShape"><option value="landscape">Liggande (16:9)</option><option value="portrait">Stående (9:16)</option><option value="square">Kvadrat (1:1)</option></select>
+      <button class="action-btn" id="generateImageBtn">Skapa bild</button><button class="action-btn" id="downloadImageBtn" disabled>Ladda ner bild</button>
+      <div class="image-preview"><canvas id="imageCanvas" width="960" height="540"></canvas></div>
+      <p class="note">Gratis grafisk bildgenerator. Bilden skapas direkt på din enhet. Den tolkar vissa ord i din beskrivning, men är inte en AI-bildmodell.</p>
     </div>
-
-    <!-- AI VIDEO -->
 
     <div class="panel" id="panel-video">
-      <h2>🎬 AI Video</h2>
-      <p>Skapa en idé och en prompt till din nästa video.</p>
-
-      <label for="videoIdea">Beskriv din video</label>
-      <textarea id="videoIdea" placeholder="Exempel: En hund som åker skateboard genom en stad..."></textarea>
-
-      <label for="videoStyle">Videostil</label>
-      <select id="videoStyle">
-        <option value="Realistisk">Realistisk</option>
-        <option value="Animerad">Animerad</option>
-        <option value="Filmisk">Filmisk</option>
-        <option value="TikTok-stil">TikTok-stil</option>
-      </select>
-
-      <label for="videoFormat">Format</label>
-      <select id="videoFormat">
-        <option value="9:16 vertikal">Vertikal (9:16)</option>
-        <option value="16:9 liggande">Liggande (16:9)</option>
-        <option value="1:1 kvadratisk">Kvadrat (1:1)</option>
-      </select>
-
-      <button class="action-btn" id="makeVideoPrompt">Skapa videoprompt</button>
-      <div class="output" id="videoOutput">Din videoprompt visas här.</div>
+      <h2>🎬 AI Video</h2><p>Skapa en idé och en prompt till din nästa video.</p>
+      <div id="videoQuota" class="note">Free: 3 videoprompter per dag. Logga in för att använda videogeneratorn.</div>
+      <label for="videoIdea">Beskriv din video</label><textarea id="videoIdea" placeholder="Exempel: En hund som åker skateboard genom en stad..."></textarea>
+      <label for="videoStyle">Videostil</label><select id="videoStyle"><option value="Realistisk">Realistisk</option><option value="Animerad">Animerad</option><option value="Filmisk">Filmisk</option><option value="TikTok-stil">TikTok-stil</option></select>
+      <label for="videoFormat">Format</label><select id="videoFormat"><option value="9:16 vertikal">Vertikal (9:16)</option><option value="16:9 liggande">Liggande (16:9)</option><option value="1:1 kvadratisk">Kvadrat (1:1)</option></select>
+      <button class="action-btn" id="makeVideoPrompt">Skapa videoprompt</button><div class="output" id="videoOutput">Din videoprompt visas här.</div>
+      <p class="note">Det här verktyget skapar en videoprompt, inte en färdig videofil.</p>
     </div>
 
-    <!-- SKOLHJÄLP -->
-
     <div class="panel" id="panel-school">
-      <h2>📚 Skolhjälp</h2>
-      <p>Få hjälp att förstå olika skolämnen.</p>
-
-      <label for="schoolSubject">Ämne</label>
-      <select id="schoolSubject">
-        <option>Matematik</option>
-        <option>Svenska</option>
-        <option>Engelska</option>
-        <option>NO</option>
-        <option>SO</option>
-        <option>Tyska</option>
-        <option>Annat</option>
-      </select>
-
-      <label for="schoolQuestion">Vad behöver du hjälp med?</label>
-      <textarea id="schoolQuestion" placeholder="Skriv din fråga här..."></textarea>
-
-      <button class="action-btn" id="sendSchool">Få hjälp</button>
-      <div class="output" id="schoolOutput">Din hjälp visas här.</div>
+      <h2>📚 Skolhjälp</h2><p>Få hjälp att förstå olika skolämnen.</p>
+      <label for="schoolSubject">Ämne</label><select id="schoolSubject"><option>Matematik</option><option>Svenska</option><option>Engelska</option><option>NO</option><option>SO</option><option>Tyska</option><option>Annat</option></select>
+      <label for="schoolQuestion">Vad behöver du hjälp med?</label><textarea id="schoolQuestion" placeholder="Skriv din fråga här..."></textarea>
+      <button class="action-btn" id="sendSchool">Få hjälp</button><div class="output" id="schoolOutput">Din hjälp visas här.</div>
     </div>
   </div>
 </section>
 
 <section id="about">
-  <div class="section-title">
-    <h2>Om ProAssist</h2>
-    <p>
-      ProAssist är en plats för lärande och kreativitet.
-      Vårt mål är att göra AI enkelt och användbart.
-    </p>
-  </div>
+  <div class="section-title"><h2>Om ProAssist</h2><p>ProAssist är en plats för lärande och kreativitet. Vårt mål är att göra AI enkelt och användbart.</p></div>
+  <div class="studio"><h2 style="margin-bottom:15px">👨‍💻 Om skaparen</h2><p style="color:#aeb3cc;line-height:1.8">ProAssist är skapat av en ung utvecklare. Målet är att skapa en gratis och användarvänlig AI-plattform för skola och kreativitet.</p></div>
+</section>
 
-  <div class="studio">
-    <h2 style="margin-bottom:15px;">👨‍💻 Om skaparen</h2>
-    <p style="color:#aeb3cc; line-height:1.8;">
-      ProAssist är skapat av en ung utvecklare som är 14 år gammal
-      och född i början av 2012. Målet är att skapa en gratis och
-      användarvänlig AI-plattform för skola och kreativitet.
-    </p>
+<section id="ownerPanel" style="display:none">
+  <div class="studio"><h2>👑 ProAssist Owner Panel</h2><p style="color:#aeb3cc;margin-top:12px;line-height:1.7">Owner-läget är aktivt. Ditt konto har Owner-behörighet.</p>
+    <div class="output"><strong>Account:</strong> <span id="ownerEmail"></span><br><br><strong>Role:</strong> Owner<br><br><strong>Status:</strong> Inloggad</div>
   </div>
 </section>
 
-<!-- OWNER PANEL -->
-<section id="ownerPanel" style="display:none;">
-  <div class="studio">
-    <h2>👑 ProAssist Owner Panel</h2>
-
-    <p style="color:#aeb3cc;margin-top:12px;line-height:1.7;">
-      Owner-läget är aktivt. Ditt konto har Owner-behörighet.
-    </p>
-
-    <div class="output">
-      <strong>Account:</strong>
-      <span id="ownerEmail"></span>
-
-      <br><br>
-
-      <strong>Role:</strong> Owner
-
-      <br><br>
-
-      <strong>Status:</strong> Inloggad
-    </div>
-  </div>
-</section>
-
-<footer>
-  © 2026 ProAssist. Skapa mer. Lär dig mer.
-
-  <div class="language-section">
-    <label for="languageSelect">🌍 Välj språk / Choose language</label>
-
+<footer>© 2026 ProAssist. Skapa mer. Lär dig mer.
+  <div class="language-section"><label for="languageSelect">🌍 Välj språk / Choose language</label>
     <select id="languageSelect">
-      <option value="sv">Swedish / Svenska</option>
-      <option value="en">English / English</option>
-      <option value="de">German / Deutsch</option>
-      <option value="ar">Arabic / العربية</option>
-      <option value="fr">French / Français</option>
-      <option value="es">Spanish / Español</option>
-      <option value="fi">Finnish / Suomi</option>
-      <option value="no">Norwegian / Norsk</option>
-      <option value="da">Danish / Dansk</option>
-      <option value="tr">Turkish / Türkçe</option>
-      <option value="pl">Polish / Polski</option>
-      <option value="it">Italian / Italiano</option>
-      <option value="pt">Portuguese / Português</option>
-      <option value="nl">Dutch / Nederlands</option>
-      <option value="ru">Russian / Русский</option>
-      <option value="zh-CN">Chinese / 中文</option>
-      <option value="ja">Japanese / 日本語</option>
-      <option value="ko">Korean / 한국어</option>
-      <option value="hi">Hindi / हिन्दी</option>
-      <option value="ur">Urdu / اردو</option>
-      <option value="fa">Persian / فارسی</option>
-      <option value="so">Somali / Soomaali</option>
-      <option value="th">Thai / ไทย</option>
-      <option value="id">Indonesian / Bahasa Indonesia</option>
-      <option value="vi">Vietnamese / Tiếng Việt</option>
-      <option value="el">Greek / Ελληνικά</option>
-      <option value="cs">Czech / Čeština</option>
-      <option value="hu">Hungarian / Magyar</option>
-      <option value="ro">Romanian / Română</option>
-      <option value="uk">Ukrainian / Українська</option>
-      <option value="he">Hebrew / עברית</option>
-      <option value="sw">Swahili / Kiswahili</option>
+      <option value="sv">Swedish / Svenska</option><option value="en">English / English</option><option value="de">German / Deutsch</option><option value="ar">Arabic / العربية</option><option value="fr">French / Français</option><option value="es">Spanish / Español</option><option value="fi">Finnish / Suomi</option><option value="no">Norwegian / Norsk</option><option value="da">Danish / Dansk</option><option value="tr">Turkish / Türkçe</option><option value="pl">Polish / Polski</option><option value="it">Italian / Italiano</option><option value="pt">Portuguese / Português</option><option value="nl">Dutch / Nederlands</option><option value="ru">Russian / Русский</option><option value="zh-CN">Chinese / 中文</option><option value="ja">Japanese / 日本語</option><option value="ko">Korean / 한국어</option><option value="hi">Hindi / हिन्दी</option><option value="ur">Urdu / اردو</option><option value="fa">Persian / فارسی</option><option value="so">Somali / Soomaali</option><option value="th">Thai / ไทย</option><option value="id">Indonesian / Bahasa Indonesia</option><option value="vi">Vietnamese / Tiếng Việt</option><option value="el">Greek / Ελληνικά</option><option value="cs">Czech / Čeština</option><option value="hu">Hungarian / Magyar</option><option value="ro">Romanian / Română</option><option value="uk">Ukrainian / Українська</option><option value="he">Hebrew / עברית</option><option value="sw">Swahili / Kiswahili</option>
     </select>
   </div>
-
   <div id="google_translate_element"></div>
 </footer>
 
 <script>
-// ===============================
-// SUPABASE GOOGLE LOGIN
-// ===============================
+"use strict";
 
+// ===============================
+// INSTÄLLNINGAR
+// ===============================
 const SUPABASE_URL = "https://ynntcirurrstglgizdbd.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_Nb_bU1sXSYveYvIiIKdXpA_0jsKDUro";
+const WORKER_URL = "https://proassist-api.joshisushi8989.workers.dev";
+const FREE_DAILY_LIMIT = 3;
 
-const supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_PUBLISHABLE_KEY
-);
-
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 let currentUser = null;
-let currentRole = "friend";
+let currentRole = "guest";
+let currentAccessToken = null;
 
 const loginButton = document.getElementById("loginButton");
 const logoutButton = document.getElementById("logoutButton");
 const userInfo = document.getElementById("userInfo");
 
+function isUnlimitedRole() {
+  return currentRole === "owner" || currentRole === "friend" || currentRole === "friend_activated";
+}
+function getChatStorageKey() {
+  return currentUser ? "proassist_chats_user_" + currentUser.id : "proassist_chats_guest";
+}
+
 loginButton.addEventListener("click", async () => {
   loginButton.disabled = true;
   loginButton.textContent = "Öppnar Google...";
-
   try {
     const { error } = await supabaseClient.auth.signInWithOAuth({
       provider: "google",
-      options: {
-        redirectTo: "https://oakleyz-mh.github.io/ProAssist/"
-      }
+      options: { redirectTo: "https://oakleyz-mh.github.io/ProAssist/" }
     });
-
     if (error) throw error;
-
   } catch (error) {
     alert("Kunde inte logga in: " + error.message);
     loginButton.disabled = false;
@@ -1333,892 +251,481 @@ loginButton.addEventListener("click", async () => {
 
 logoutButton.addEventListener("click", async () => {
   logoutButton.disabled = true;
-
   const { error } = await supabaseClient.auth.signOut();
-
-  if (error) {
-    alert("Kunde inte logga ut: " + error.message);
-  }
-
+  if (error) alert("Kunde inte logga ut: " + error.message);
   logoutButton.disabled = false;
 });
 
 async function updateOwnerPanel() {
-  const panel = document.getElementById("ownerPanel");
-  const ownerEmail = document.getElementById("ownerEmail");
-
-  const isOwner = currentUser && currentRole === "owner";
-
-  panel.style.display = isOwner ? "block" : "none";
-
-  if (isOwner && ownerEmail) {
-    ownerEmail.textContent = currentUser.email || "";
-  }
+  const isOwner = !!currentUser && currentRole === "owner";
+  document.getElementById("ownerPanel").style.display = isOwner ? "block" : "none";
+  if (isOwner) document.getElementById("ownerEmail").textContent = currentUser.email || "";
 }
 
 async function updateLoginStatus() {
-  const { data, error } = await supabaseClient.auth.getUser();
+  const { data, error } = await supabaseClient.auth.getSession();
+  const session = data?.session;
+  currentUser = session?.user || null;
+  currentAccessToken = session?.access_token || null;
 
-  if (error || !data.user) {
-    currentUser = null;
-    currentRole = "friend";
-
+  if (!currentUser) {
+    currentRole = "guest";
     loginButton.style.display = "block";
     loginButton.disabled = false;
     loginButton.textContent = "Logga in med Google";
-
     logoutButton.style.display = "none";
-    userInfo.textContent = "";
-
+    userInfo.textContent = "Gästläge";
+    loadChatsForCurrentAccount();
     await updateOwnerPanel();
+    updateQuotaLabels();
     return;
   }
 
-  currentUser = data.user;
-
-  const { data: roleData, error: roleError } =
-    await supabaseClient
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", currentUser.id)
-      .maybeSingle();
+  const { data: roleData, error: roleError } = await supabaseClient
+    .from("user_roles").select("role").eq("user_id", currentUser.id).maybeSingle();
 
   if (roleError) {
     console.error("Kunde inte läsa användarroll:", roleError);
-    currentRole = "friend";
+    currentRole = "free";
   } else {
-    currentRole =
-      roleData?.role === "owner" ? "owner" : "friend";
+    const role = String(roleData?.role || "free").toLowerCase();
+    currentRole = role === "owner" ? "owner" :
+      (role === "friend" || role === "friend_activated") ? role : "free";
   }
 
   loginButton.style.display = "none";
   logoutButton.style.display = "block";
-
-  userInfo.textContent =
-    currentRole === "owner"
-      ? "Marcus · Owner 👑"
-      : "Friend";
-
+  userInfo.textContent = currentRole === "owner" ? "Owner 👑" :
+    isUnlimitedRole() ? "Friend ⭐" : "Free";
+  loadChatsForCurrentAccount();
   await updateOwnerPanel();
+  updateQuotaLabels();
 }
 
-supabaseClient.auth.onAuthStateChange(() => {
-  setTimeout(() => {
-    updateLoginStatus();
-  }, 0);
+supabaseClient.auth.onAuthStateChange((_event, session) => {
+  currentUser = session?.user || null;
+  currentAccessToken = session?.access_token || null;
+  setTimeout(() => updateLoginStatus(), 0);
 });
-
 updateLoginStatus();
 
 // ===============================
 // TABBAR
 // ===============================
-
 const tabs = document.querySelectorAll(".tab");
 const panels = document.querySelectorAll(".panel");
-
 function openTab(name) {
-  tabs.forEach(tab => {
-    tab.classList.toggle("active", tab.dataset.tab === name);
-  });
-
-  panels.forEach(panel => {
-    panel.classList.toggle("active", panel.id === "panel-" + name);
-  });
-
-  document.getElementById("app").scrollIntoView({
-    behavior: "smooth"
-  });
+  tabs.forEach(tab => tab.classList.toggle("active", tab.dataset.tab === name));
+  panels.forEach(panel => panel.classList.toggle("active", panel.id === "panel-" + name));
+  document.getElementById("app").scrollIntoView({behavior:"smooth"});
 }
-
-tabs.forEach(tab => {
-  tab.addEventListener("click", () => openTab(tab.dataset.tab));
-});
+tabs.forEach(tab => tab.addEventListener("click", () => openTab(tab.dataset.tab)));
 
 // ===============================
-// SPRÅKVÄLJARE
+// SPRÅK
 // ===============================
-
 const languageSelect = document.getElementById("languageSelect");
-const rtlLanguages = ["ar", "ur", "fa", "he"];
-
+const rtlLanguages = ["ar","ur","fa","he"];
+const languageNames = {
+  sv:"Swedish",en:"English",ar:"Arabic",de:"German",fr:"French",es:"Spanish",fi:"Finnish",
+  no:"Norwegian",da:"Danish",tr:"Turkish",pl:"Polish",it:"Italian",pt:"Portuguese",
+  nl:"Dutch",ru:"Russian","zh-CN":"Chinese",ja:"Japanese",ko:"Korean",hi:"Hindi",
+  ur:"Urdu",fa:"Persian",so:"Somali",th:"Thai",id:"Indonesian",vi:"Vietnamese",
+  el:"Greek",cs:"Czech",hu:"Hungarian",ro:"Romanian",uk:"Ukrainian",he:"Hebrew",sw:"Swahili"
+};
 function setPageDirection(language) {
-  document.documentElement.dir =
-    rtlLanguages.includes(language) ? "rtl" : "ltr";
+  document.documentElement.dir = rtlLanguages.includes(language) ? "rtl" : "ltr";
 }
-
 function changeWebsiteLanguage(language) {
   localStorage.setItem("proassist_language", language);
   setPageDirection(language);
-
   const translateSelect = document.querySelector(".goog-te-combo");
-
   if (translateSelect) {
     translateSelect.value = language;
     translateSelect.dispatchEvent(new Event("change"));
   }
 }
-
-languageSelect.addEventListener("change", () => {
-  changeWebsiteLanguage(languageSelect.value);
-});
-
-const savedLanguage =
-  localStorage.getItem("proassist_language") || "sv";
-
+languageSelect.addEventListener("change", () => changeWebsiteLanguage(languageSelect.value));
+const savedLanguage = localStorage.getItem("proassist_language") || "sv";
 languageSelect.value = savedLanguage;
 setPageDirection(savedLanguage);
 
 function googleTranslateElementInit() {
   new google.translate.TranslateElement({
-    pageLanguage: "sv",
-    includedLanguages:
-      "en,ar,de,fr,es,fi,no,da,tr,pl,it,pt,nl,ru,zh-CN,ja,ko,hi,ur,fa,so,th,id,vi,el,cs,hu,ro,uk,he,sw",
-    autoDisplay: false
+    pageLanguage:"sv",
+    includedLanguages:"en,ar,de,fr,es,fi,no,da,tr,pl,it,pt,nl,ru,zh-CN,ja,ko,hi,ur,fa,so,th,id,vi,el,cs,hu,ro,uk,he,sw",
+    autoDisplay:false
   }, "google_translate_element");
-
   let attempts = 0;
-
-  const applySavedLanguage = setInterval(() => {
+  const timer = setInterval(() => {
     attempts++;
-
-    const translateSelect = document.querySelector(".goog-te-combo");
-
-    if (translateSelect) {
-      translateSelect.value = savedLanguage;
-      translateSelect.dispatchEvent(new Event("change"));
-      clearInterval(applySavedLanguage);
+    const combo = document.querySelector(".goog-te-combo");
+    if (combo) {
+      combo.value = savedLanguage;
+      combo.dispatchEvent(new Event("change"));
+      clearInterval(timer);
     }
-
-    if (attempts >= 20) {
-      clearInterval(applySavedLanguage);
-    }
+    if (attempts >= 20) clearInterval(timer);
   }, 500);
 }
-
 const translateScript = document.createElement("script");
-translateScript.src =
-  "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+translateScript.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
 translateScript.async = true;
 document.head.appendChild(translateScript);
 
 // ===============================
-// SPRÅKNAMN FÖR AI
+// KVOTER – SERVERN KONTROLLERAR
 // ===============================
-
-const languageNames = {
-  sv: "Swedish",
-  en: "English",
-  ar: "Arabic",
-  de: "German",
-  fr: "French",
-  es: "Spanish",
-  fi: "Finnish",
-  no: "Norwegian",
-  da: "Danish",
-  tr: "Turkish",
-  pl: "Polish",
-  it: "Italian",
-  pt: "Portuguese",
-  nl: "Dutch",
-  ru: "Russian",
-  "zh-CN": "Chinese",
-  ja: "Japanese",
-  ko: "Korean",
-  hi: "Hindi",
-  ur: "Urdu",
-  fa: "Persian",
-  so: "Somali",
-  th: "Thai",
-  id: "Indonesian",
-  vi: "Vietnamese",
-  el: "Greek",
-  cs: "Czech",
-  hu: "Hungarian",
-  ro: "Romanian",
-  uk: "Ukrainian",
-  he: "Hebrew",
-  sw: "Swahili"
-};
-
-// ===============================
-// AI CHAT-LÄGEN
-// ===============================
-
-const chatModes = {
-  general: {
-    title: "💬 Vanlig AI-chatt",
-    instruction:
-      "You are a helpful general AI assistant. Answer questions clearly and naturally."
-  },
-
-  school: {
-    title: "📚 Skolhjälp",
-    instruction:
-      "You are a helpful school tutor. Explain things simply at approximately grade 8 level. Help the student understand, use examples and guide learning."
-  },
-
-  creative: {
-    title: "💡 Idéer och kreativitet",
-    instruction:
-      "You are a creative assistant. Help with ideas, projects, stories, brainstorming and creative thinking."
-  },
-
-  knowledge: {
-    title: "🌍 Allmän kunskap",
-    instruction:
-      "You are a general knowledge assistant. Explain history, geography, science, technology, sports and culture. Be accurate, distinguish facts from opinions and say when you are uncertain."
-  },
-
-  writing: {
-    title: "✍️ Skrivhjälp",
-    instruction:
-      "You are a writing assistant. Help improve spelling, grammar, structure and wording while keeping the user's intended meaning and writing level."
+async function consumeQuota(kind) {
+  if (!currentUser || !currentAccessToken) {
+    throw new Error("Logga in med Google för att använda bilder och videoprompter. Free får 3 av varje per dag.");
   }
-};
+  if (isUnlimitedRole()) return {unlimited:true};
 
+  const response = await fetch(WORKER_URL + "/consume-quota", {
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "Authorization":"Bearer " + currentAccessToken
+    },
+    body:JSON.stringify({kind})
+  });
+
+  let data = {};
+  try { data = await response.json(); } catch {}
+  if (!response.ok || data.allowed === false) {
+    throw new Error(data.details || data.error || "Din dagliga gräns är nådd. Försök igen imorgon.");
+  }
+  return data;
+}
+function updateQuotaLabels() {
+  const image = document.getElementById("imageQuota");
+  const video = document.getElementById("videoQuota");
+  if (!currentUser) {
+    image.textContent = "Logga in för att skapa bilder. Free får 3 bilder per dag; Friend och Owner har obegränsat.";
+    video.textContent = "Logga in för att skapa videoprompter. Free får 3 per dag; Friend och Owner har obegränsat.";
+  } else if (isUnlimitedRole()) {
+    image.textContent = "⭐ " + (currentRole === "owner" ? "Owner" : "Friend") + ": obegränsat antal bilder.";
+    video.textContent = "⭐ " + (currentRole === "owner" ? "Owner" : "Friend") + ": obegränsat antal videoprompter.";
+  } else {
+    image.textContent = "Free: upp till 3 bilder per dag.";
+    video.textContent = "Free: upp till 3 videoprompter per dag.";
+  }
+}
+
+// ===============================
+// AI-LÄGEN
+// ===============================
+const chatModes = {
+  general:{title:"💬 Vanlig AI-chatt",instruction:"You are a helpful general AI assistant. Answer questions clearly and naturally."},
+  school:{title:"📚 Skolhjälp",instruction:"You are a helpful school tutor. Explain things simply at approximately grade 8 level. Help the student understand, use examples and guide learning."},
+  creative:{title:"💡 Idéer och kreativitet",instruction:"You are a creative assistant. Help with ideas, projects, stories, brainstorming and creative thinking."},
+  knowledge:{title:"🌍 Allmän kunskap",instruction:"You are a general knowledge assistant. Explain history, geography, science, technology, sports and culture. Be accurate, distinguish facts from opinions and say when you are uncertain."},
+  writing:{title:"✍️ Skrivhjälp",instruction:"You are a writing assistant. Help improve spelling, grammar, structure and wording while keeping the user's intended meaning and writing level."}
+};
 let currentChatMode = "general";
 
 // ===============================
-// SPARADE CHATTAR
+// CHATTAR – SEPARAT LAGRING PER KONTO
 // ===============================
-
-const CHAT_STORAGE_KEY = "proassist_chats_v1";
-
 let chats = [];
-
-try {
-  const saved = localStorage.getItem(CHAT_STORAGE_KEY);
-  chats = saved ? JSON.parse(saved) : [];
-  if (!Array.isArray(chats)) chats = [];
-} catch {
-  chats = [];
-}
-
 let currentChatId = null;
 let sendingMessage = false;
 
+function loadChatsForCurrentAccount() {
+  const key = getChatStorageKey();
+  try {
+    const stored = JSON.parse(localStorage.getItem(key) || "[]");
+    chats = Array.isArray(stored) ? stored : [];
+  } catch { chats = []; }
+  currentChatId = chats[0]?.id || null;
+  renderChatHomeList();
+  renderChatList();
+  renderChat();
+}
 function saveChats() {
   try {
-    localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(chats));
+    localStorage.setItem(getChatStorageKey(), JSON.stringify(chats));
   } catch {
     const status = document.getElementById("chatStatus");
-    if (status) {
-      status.textContent =
-        "Kunde inte spara chatten i webbläsaren.";
-    }
+    if (status) status.textContent = "Kunde inte spara chatten i webbläsaren.";
   }
 }
-
-function getCurrentChat() {
-  return chats.find(chat => chat.id === currentChatId);
-}
+function getCurrentChat() { return chats.find(chat => chat.id === currentChatId); }
 
 function createChat() {
   const chat = {
-    id: Date.now().toString() +
-      Math.random().toString(16).slice(2),
-    title: "Ny chatt",
-    mode: currentChatMode,
-    messages: []
+    id:Date.now().toString() + Math.random().toString(16).slice(2),
+    title:"Ny chatt",mode:currentChatMode,messages:[]
   };
-
   chats.unshift(chat);
   currentChatId = chat.id;
-
-  saveChats();
-  renderChat();
-  renderChatList();
-
+  saveChats();renderChat();renderChatList();
   document.getElementById("chatInput").focus();
 }
-
 function startChatMode(mode) {
   if (sendingMessage) return;
-
   currentChatMode = chatModes[mode] ? mode : "general";
-
   createChat();
-
   document.getElementById("chatHome").style.display = "none";
   document.getElementById("chatConversation").style.display = "block";
-
-  document.getElementById("chatModeTitle").textContent =
-    chatModes[currentChatMode].title;
-
-  renderChat();
-  renderChatList();
+  document.getElementById("chatModeTitle").textContent = chatModes[currentChatMode].title;
+  renderChat();renderChatList();
 }
-
 function showChatHome() {
   if (sendingMessage) return;
-
   document.getElementById("chatConversation").style.display = "none";
   document.getElementById("chatHome").style.display = "block";
-
   renderChatHomeList();
 }
-
+function openSavedChat(id) {
+  if (sendingMessage) return;
+  const chat = chats.find(item => item.id === id);
+  if (!chat) return;
+  currentChatId = chat.id;
+  currentChatMode = chatModes[chat.mode] ? chat.mode : "general";
+  document.getElementById("chatHome").style.display = "none";
+  document.getElementById("chatConversation").style.display = "block";
+  document.getElementById("chatModeTitle").textContent = chatModes[currentChatMode].title;
+  renderChat();renderChatList();
+}
 function renderChatHomeList() {
   const list = document.getElementById("chatHomeList");
+  if (!list) return;
   list.replaceChildren();
-
   chats.forEach(chat => {
     const button = document.createElement("button");
-
     button.className = "chat-history-btn";
     button.textContent = chat.title || "Ny chatt";
-
-    button.addEventListener("click", () => {
-      if (sendingMessage) return;
-
-      currentChatId = chat.id;
-      currentChatMode = chat.mode && chatModes[chat.mode]
-        ? chat.mode
-        : "general";
-
-      document.getElementById("chatHome").style.display = "none";
-      document.getElementById("chatConversation").style.display = "block";
-
-      document.getElementById("chatModeTitle").textContent =
-        chatModes[currentChatMode].title;
-
-      renderChat();
-      renderChatList();
-    });
-
+    button.addEventListener("click", () => openSavedChat(chat.id));
     list.appendChild(button);
   });
-
-  if (chats.length === 0) {
-    list.textContent = "Du har inga tidigare chattar ännu.";
-  }
+  if (!chats.length) list.textContent = "Du har inga tidigare chattar ännu.";
 }
-
 function renderChatList() {
   const list = document.getElementById("chatList");
+  if (!list) return;
   list.replaceChildren();
-
   chats.forEach(chat => {
     const button = document.createElement("button");
-    button.className = "chat-history-btn";
-
-    if (chat.id === currentChatId) {
-      button.classList.add("active");
-    }
-
+    button.className = "chat-history-btn" + (chat.id === currentChatId ? " active" : "");
     button.textContent = chat.title || "Ny chatt";
-
     button.addEventListener("click", () => {
       if (sendingMessage) return;
-
       currentChatId = chat.id;
-
-      currentChatMode = chat.mode && chatModes[chat.mode]
-        ? chat.mode
-        : "general";
-
-      document.getElementById("chatModeTitle").textContent =
-        chatModes[currentChatMode].title;
-
-      renderChat();
-      renderChatList();
+      currentChatMode = chatModes[chat.mode] ? chat.mode : "general";
+      document.getElementById("chatModeTitle").textContent = chatModes[currentChatMode].title;
+      renderChat();renderChatList();
     });
-
     list.appendChild(button);
   });
 }
-
 function renderChat() {
   const area = document.getElementById("chatMessages");
+  if (!area) return;
   area.replaceChildren();
-
   const chat = getCurrentChat();
-
-  if (!chat || !chat.messages || chat.messages.length === 0) {
+  if (!chat || !Array.isArray(chat.messages) || !chat.messages.length) {
     const welcome = document.createElement("div");
     welcome.className = "chat-message assistant";
-    welcome.textContent =
-      "Hej! Jag är ProAssist. Vad vill du ha hjälp med?";
-
+    welcome.textContent = "Hej! Jag är ProAssist. Vad vill du ha hjälp med?";
     area.appendChild(welcome);
     return;
   }
-
   chat.messages.forEach(message => {
     const bubble = document.createElement("div");
-
-    bubble.className =
-      "chat-message " +
-      (message.role === "user" ? "user" : "assistant");
-
-    bubble.textContent = message.text;
+    bubble.className = "chat-message " + (message.role === "user" ? "user" : "assistant");
+    bubble.textContent = message.text || "";
     area.appendChild(bubble);
   });
-
   area.scrollTop = area.scrollHeight;
 }
-
-// ===============================
-// MINNE FRÅN TIDIGARE CHATTAR
-// ===============================
-
 function buildPreviousChatContext() {
-  let previousContext = "";
-
-  const previousChats = chats
-    .filter(oldChat => oldChat.id !== currentChatId)
-    .slice(0, 10);
-
-  previousChats.forEach(oldChat => {
+  let context = "";
+  chats.filter(chat => chat.id !== currentChatId).slice(0,10).forEach(oldChat => {
     if (!Array.isArray(oldChat.messages)) return;
-
-    const oldMessages = oldChat.messages
-      .slice(-6)
-      .map(item => {
-        const speaker =
-          item.role === "user" ? "Användaren" : "ProAssist";
-
-        return speaker + ": " +
-          String(item.text || "").slice(0, 1200);
-      })
-      .join("\n");
-
-    if (oldMessages) {
-      previousContext +=
-        "\nTidigare chatt (" +
-        String(oldChat.title || "Chatt").slice(0, 80) +
-        "):\n" +
-        oldMessages +
-        "\n";
-    }
+    const oldMessages = oldChat.messages.slice(-6).map(item =>
+      (item.role === "user" ? "Användaren" : "ProAssist") + ": " + String(item.text || "").slice(0,1200)
+    ).join("\n");
+    if (oldMessages) context += "\nTidigare chatt (" + String(oldChat.title || "Chatt").slice(0,80) + "):\n" + oldMessages + "\n";
   });
-
-  return previousContext.slice(0, 6000);
+  return context.slice(0,6000);
 }
 
 // ===============================
-// SKICKA CHATTMEDDELANDE
+// CHAT – GÄSTLÄGE OCH INLOGGADE KONTON
 // ===============================
-
 async function sendChatMessage() {
   if (sendingMessage) return;
-
   const input = document.getElementById("chatInput");
   const button = document.getElementById("sendChat");
   const status = document.getElementById("chatStatus");
-
   const message = input.value.trim();
-
-  if (!message) {
-    input.focus();
-    return;
-  }
-
+  if (!message) { input.focus();return; }
   if (!currentChatId) createChat();
-
   const chat = getCurrentChat();
   if (!chat) return;
 
-  chat.messages.push({
-    role: "user",
-    text: message
-  });
-
-  if (chat.title === "Ny chatt") {
-    chat.title = message.slice(0, 35);
-  }
-
+  chat.messages.push({role:"user",text:message});
+  if (chat.title === "Ny chatt") chat.title = message.slice(0,35);
   input.value = "";
-  sendingMessage = true;
-  button.disabled = true;
-  status.textContent = "ProAssist tänker...";
-
-  saveChats();
-  renderChat();
-  renderChatList();
+  sendingMessage = true;button.disabled = true;status.textContent = "ProAssist tänker...";
+  saveChats();renderChat();renderChatList();
 
   try {
-    const selectedLanguage =
-      localStorage.getItem("proassist_language") || "sv";
-
-    const selectedLanguageName =
-      languageNames[selectedLanguage] || "Swedish";
-
-    const messagesForAI = chat.messages.map(item => ({
-      role: item.role,
-      text: item.text
-    }));
-
-    const previousContext = buildPreviousChatContext();
-
-    const response = await fetch(
-      "https://proassist-api.joshisushi8989.workers.dev/chat",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          messages: messagesForAI,
-          memoryContext: previousContext,
-          modeInstruction: chatModes[currentChatMode].instruction,
-          language: selectedLanguageName
-        })
-      }
-    );
-
+    const selectedLanguage = localStorage.getItem("proassist_language") || "sv";
+    const language = languageNames[selectedLanguage] || "Swedish";
+    const response = await fetch(WORKER_URL + "/chat", {
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        messages:chat.messages.map(item => ({role:item.role === "model" ? "assistant" : item.role,text:item.text})),
+        memoryContext:buildPreviousChatContext(),
+        modeInstruction:chatModes[currentChatMode].instruction,
+        language
+      })
+    });
     const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.details || data.error || "Serverfel");
-    }
-
-    if (!data.reply) {
-      throw new Error("Inget svar kom från AI-servern.");
-    }
-
-    chat.messages.push({
-      role: "model",
-      text: data.reply
-    });
-
-    status.textContent =
-      "Chatten sparas automatiskt. Tidigare chattar kan användas som sammanhang.";
-
+    if (!response.ok) throw new Error(data.details || data.error || "Serverfel");
+    if (!data.reply) throw new Error("Inget svar kom från AI-servern.");
+    chat.messages.push({role:"model",text:data.reply});
+    status.textContent = "Chatten sparas separat för det här kontot.";
   } catch (error) {
-    chat.messages.push({
-      role: "model",
-      text: "Kunde inte ansluta till ProAssist: " + error.message
-    });
-
+    chat.messages.push({role:"model",text:"Kunde inte ansluta till ProAssist: " + error.message});
     status.textContent = "Ett fel uppstod.";
   } finally {
-    sendingMessage = false;
-    button.disabled = false;
-
-    saveChats();
-    renderChat();
-    renderChatList();
-    input.focus();
+    sendingMessage = false;button.disabled = false;
+    saveChats();renderChat();renderChatList();input.focus();
   }
 }
-
-document.getElementById("sendChat").addEventListener(
-  "click",
-  sendChatMessage
-);
-
-document.getElementById("newChat").addEventListener(
-  "click",
-  () => {
-    if (!sendingMessage) createChat();
-  }
-);
-
-document.getElementById("chatInput").addEventListener(
-  "keydown",
-  event => {
-    if (event.key === "Enter" && !event.shiftKey) {
-      event.preventDefault();
-      sendChatMessage();
-    }
-  }
-);
+document.getElementById("sendChat").addEventListener("click",sendChatMessage);
+document.getElementById("newChat").addEventListener("click",() => {if (!sendingMessage) createChat();});
+document.getElementById("chatInput").addEventListener("keydown",event => {
+  if (event.key === "Enter" && !event.shiftKey) {event.preventDefault();sendChatMessage();}
+});
 
 // ===============================
 // SKOLHJÄLP
 // ===============================
+document.getElementById("sendSchool").addEventListener("click",async () => {
+  const subject = document.getElementById("schoolSubject").value;
+  const question = document.getElementById("schoolQuestion").value.trim();
+  if (!question) {alert("Skriv först din fråga!");return;}
+  const button = document.getElementById("sendSchool");
+  const output = document.getElementById("schoolOutput");
+  button.disabled = true;output.textContent = "ProAssist tänker...";
+  try {
+    const selectedLanguage = localStorage.getItem("proassist_language") || "sv";
+    const language = languageNames[selectedLanguage] || "Swedish";
+    const response = await fetch(WORKER_URL + "/chat", {
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({message:"Help me with the school subject " + subject + ". Explain simply at approximately grade 8 level. Answer in " + language + ". My question is: " + question})
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.details || data.error || "Serverfel");
+    output.textContent = data.reply || "Inget svar kom.";
+  } catch (error) {output.textContent = "Fel: " + error.message;}
+  finally {button.disabled = false;}
+});
 
-document.getElementById("sendSchool").addEventListener(
-  "click",
-  async () => {
-    const subject =
-      document.getElementById("schoolSubject").value;
+// ===============================
+// AI VIDEO – 3 PER DAG FÖR FREE
+// ===============================
+document.getElementById("makeVideoPrompt").addEventListener("click",async () => {
+  const idea = document.getElementById("videoIdea").value.trim();
+  const style = document.getElementById("videoStyle").value;
+  const format = document.getElementById("videoFormat").value;
+  const output = document.getElementById("videoOutput");
+  const button = document.getElementById("makeVideoPrompt");
+  if (!idea) {alert("Skriv först vad din video ska handla om!");return;}
+  button.disabled = true;output.textContent = "Kontrollerar din dagliga gräns...";
+  try {
+    const quota = await consumeQuota("video");
+    const prompt = "Create a " + style + " video.\n\nScene: " + idea +
+      "\n\nFormat: " + format +
+      "\nHigh quality, smooth motion, detailed environment, professional lighting and cinematic composition.";
+    output.textContent = prompt + (quota.remaining !== undefined ? "\n\nÅterstående idag: " + quota.remaining : "");
+  } catch (error) {
+    output.textContent = error.message;
+  } finally {button.disabled = false;}
+});
 
-    const question =
-      document.getElementById("schoolQuestion").value.trim();
-
-    if (!question) {
-      alert("Skriv först din fråga!");
-      return;
+// ===============================
+// GRAFISK BILDGENERATOR – 3 PER DAG FÖR FREE
+// ===============================
+async function generateImage() {
+  const idea = document.getElementById("imageIdea").value.trim();
+  const style = document.getElementById("imageStyle").value;
+  const shape = document.getElementById("imageShape").value;
+  const button = document.getElementById("generateImageBtn");
+  if (!idea) {alert("Skriv först vad du vill skapa!");return;}
+  button.disabled = true;
+  try {
+    await consumeQuota("image");
+    const canvas = document.getElementById("imageCanvas");
+    const ctx = canvas.getContext("2d");
+    if (shape === "portrait") {canvas.width=540;canvas.height=960;}
+    else if (shape === "square") {canvas.width=800;canvas.height=800;}
+    else {canvas.width=960;canvas.height=540;}
+    const w=canvas.width,h=canvas.height,text=idea.toLowerCase();
+    let colors=["#101b45","#315da8","#ff9b71"];
+    if (text.includes("natt") || text.includes("rymd")) colors=["#05051d","#25246e","#8b5cf6"];
+    else if (text.includes("skog")) colors=["#102c22","#28734b","#a3b86b"];
+    else if (text.includes("hav") || text.includes("vatten")) colors=["#071d49","#087eaa","#64d8e8"];
+    else if (text.includes("sol") || text.includes("sommar")) colors=["#ffb36b","#ff704d","#ffe49b"];
+    if (style==="Neon") colors=["#090020","#6500a8","#00e5ff"];
+    else if (style==="Minimalistisk") colors=["#e8d9c5","#9ab8a4","#405d55"];
+    else if (style==="Pixel art") colors=["#10152d","#315b83","#e8bd72"];
+    const gradient=ctx.createLinearGradient(0,0,0,h);
+    gradient.addColorStop(0,colors[0]);gradient.addColorStop(.65,colors[1]);gradient.addColorStop(1,colors[2]);
+    ctx.fillStyle=gradient;ctx.fillRect(0,0,w,h);
+    let seed=0;for(let i=0;i<idea.length;i++) seed=(seed*31+idea.charCodeAt(i))>>>0;
+    function random(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;}
+    if(style!=="Minimalistisk") for(let i=0;i<75;i++){
+      ctx.fillStyle="rgba(255,255,255,"+(random()*.8)+")";
+      ctx.beginPath();ctx.arc(random()*w,random()*h*.65,random()*2+1,0,Math.PI*2);ctx.fill();
     }
-
-    const button = document.getElementById("sendSchool");
-    const output = document.getElementById("schoolOutput");
-
-    button.disabled = true;
-    output.textContent = "ProAssist tänker...";
-
-    try {
-      const selectedLanguage =
-        localStorage.getItem("proassist_language") || "sv";
-
-      const selectedLanguageName =
-        languageNames[selectedLanguage] || "Swedish";
-
-      const response = await fetch(
-        "https://proassist-api.joshisushi8989.workers.dev/chat",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            message:
-              "Help me with the school subject " + subject +
-              ". Explain simply at approximately grade 8 level. " +
-              "Answer in " + selectedLanguageName +
-              ". My question is: " + question
-          })
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.details || data.error || "Serverfel");
+    const sunX=w*(.25+random()*.5),sunY=h*.35,sunSize=Math.min(w,h)*.11;
+    ctx.fillStyle=colors[2];ctx.beginPath();ctx.arc(sunX,sunY,sunSize,0,Math.PI*2);ctx.fill();
+    if(text.includes("stad")){
+      for(let i=0;i<15;i++){
+        const bw=w/18,bh=h*(.15+random()*.4),x=i*w/15;
+        ctx.fillStyle=style==="Neon"?"#17102e":"#182b49";ctx.fillRect(x,h-bh,bw,bh);ctx.fillStyle="#ffe58a";
+        for(let y=h-bh+15;y<h-10;y+=24) if(random()>.4) ctx.fillRect(x+8,y,7,10);
       }
-
-      output.textContent = data.reply || "Inget svar kom.";
-
-    } catch (error) {
-      output.textContent = "Fel: " + error.message;
-    } finally {
-      button.disabled = false;
-    }
-  }
-);
-
-// ===============================
-// AI VIDEO
-// ===============================
-
-document.getElementById("makeVideoPrompt").addEventListener(
-  "click",
-  () => {
-    const idea =
-      document.getElementById("videoIdea").value.trim();
-
-    const style =
-      document.getElementById("videoStyle").value;
-
-    const format =
-      document.getElementById("videoFormat").value;
-
-    if (!idea) {
-      alert("Skriv först vad din video ska handla om!");
-      return;
-    }
-
-    const prompt =
-      "Create a " + style + " video.\n\n" +
-      "Scene: " + idea + "\n\n" +
-      "Format: " + format + "\n" +
-      "High quality, smooth motion, detailed environment, " +
-      "professional lighting and cinematic composition.";
-
-    document.getElementById("videoOutput").textContent = prompt;
-  }
-);
-
-// ===============================
-// GRATIS BILDGENERATOR
-// ===============================
-
-function generateImage() {
-  const idea =
-    document.getElementById("imageIdea").value.trim();
-
-  const style =
-    document.getElementById("imageStyle").value;
-
-  const shape =
-    document.getElementById("imageShape").value;
-
-  if (!idea) {
-    alert("Skriv först vad du vill skapa!");
-    return;
-  }
-
-  const canvas = document.getElementById("imageCanvas");
-  const ctx = canvas.getContext("2d");
-
-  if (shape === "portrait") {
-    canvas.width = 540;
-    canvas.height = 960;
-  } else if (shape === "square") {
-    canvas.width = 800;
-    canvas.height = 800;
-  } else {
-    canvas.width = 960;
-    canvas.height = 540;
-  }
-
-  const w = canvas.width;
-  const h = canvas.height;
-  const text = idea.toLowerCase();
-
-  let colors = ["#101b45", "#315da8", "#ff9b71"];
-
-  if (text.includes("natt") || text.includes("rymd")) {
-    colors = ["#05051d", "#25246e", "#8b5cf6"];
-  } else if (text.includes("skog")) {
-    colors = ["#102c22", "#28734b", "#a3b86b"];
-  } else if (text.includes("hav") || text.includes("vatten")) {
-    colors = ["#071d49", "#087eaa", "#64d8e8"];
-  } else if (text.includes("sol") || text.includes("sommar")) {
-    colors = ["#ffb36b", "#ff704d", "#ffe49b"];
-  }
-
-  if (style === "Neon") {
-    colors = ["#090020", "#6500a8", "#00e5ff"];
-  } else if (style === "Minimalistisk") {
-    colors = ["#e8d9c5", "#9ab8a4", "#405d55"];
-  } else if (style === "Pixel art") {
-    colors = ["#10152d", "#315b83", "#e8bd72"];
-  }
-
-  const gradient = ctx.createLinearGradient(0,0,0,h);
-  gradient.addColorStop(0,colors[0]);
-  gradient.addColorStop(.65,colors[1]);
-  gradient.addColorStop(1,colors[2]);
-
-  ctx.fillStyle = gradient;
-  ctx.fillRect(0,0,w,h);
-
-  let seed = 0;
-
-  for (let i = 0; i < idea.length; i++) {
-    seed = (seed * 31 + idea.charCodeAt(i)) >>> 0;
-  }
-
-  function random() {
-    seed = (seed * 1664525 + 1013904223) >>> 0;
-    return seed / 4294967296;
-  }
-
-  if (style !== "Minimalistisk") {
-    for (let i = 0; i < 75; i++) {
-      ctx.fillStyle =
-        "rgba(255,255,255," + (random() * .8) + ")";
-
-      ctx.beginPath();
-      ctx.arc(
-        random() * w,
-        random() * h * .65,
-        random() * 2 + 1,
-        0,
-        Math.PI * 2
-      );
-      ctx.fill();
-    }
-  }
-
-  const sunX = w * (.25 + random() * .5);
-  const sunY = h * .35;
-  const sunSize = Math.min(w,h) * .11;
-
-  ctx.fillStyle = colors[2];
-  ctx.beginPath();
-  ctx.arc(sunX,sunY,sunSize,0,Math.PI * 2);
-  ctx.fill();
-
-  if (text.includes("stad")) {
-    for (let i = 0; i < 15; i++) {
-      const bw = w / 18;
-      const bh = h * (.15 + random() * .4);
-      const x = i * w / 15;
-
-      ctx.fillStyle =
-        style === "Neon" ? "#17102e" : "#182b49";
-
-      ctx.fillRect(x,h - bh,bw,bh);
-      ctx.fillStyle = "#ffe58a";
-
-      for (let y = h - bh + 15; y < h - 10; y += 24) {
-        if (random() > .4) {
-          ctx.fillRect(x + 8,y,7,10);
-        }
+    } else {
+      for(let i=0;i<4;i++){
+        ctx.fillStyle=["#263d62","#1c3450","#142b42","#102438"][i];
+        ctx.beginPath();ctx.moveTo(0,h*(.65+i*.09));
+        for(let x=0;x<=w;x+=30) ctx.lineTo(x,h*(.55+i*.09)+random()*h*.12);
+        ctx.lineTo(w,h);ctx.lineTo(0,h);ctx.closePath();ctx.fill();
       }
     }
-  } else {
-    for (let i = 0; i < 4; i++) {
-      ctx.fillStyle =
-        ["#263d62","#1c3450","#142b42","#102438"][i];
-
-      ctx.beginPath();
-      ctx.moveTo(0,h * (.65 + i * .09));
-
-      for (let x = 0; x <= w; x += 30) {
-        ctx.lineTo(
-          x,
-          h * (.55 + i * .09) + random() * h * .12
-        );
-      }
-
-      ctx.lineTo(w,h);
-      ctx.lineTo(0,h);
-      ctx.closePath();
-      ctx.fill();
-    }
-  }
-
-  if (text.includes("hav") || text.includes("vatten")) {
-    ctx.fillStyle = "rgba(80,210,240,.5)";
-    ctx.fillRect(0,h * .72,w,h * .28);
-  }
-
-  ctx.fillStyle = "rgba(255,255,255,.9)";
-  ctx.font = `bold ${Math.max(16,w * .025)}px Arial`;
-  ctx.fillText("ProAssist",20,h - 22);
-
-  document.getElementById("downloadImageBtn").disabled = false;
+    if(text.includes("hav")||text.includes("vatten")){ctx.fillStyle="rgba(80,210,240,.5)";ctx.fillRect(0,h*.72,w,h*.28);}
+    ctx.fillStyle="rgba(255,255,255,.9)";ctx.font=`bold ${Math.max(16,w*.025)}px Arial`;ctx.fillText("ProAssist",20,h-22);
+    document.getElementById("downloadImageBtn").disabled=false;
+  } catch(error) {
+    alert(error.message);
+  } finally {button.disabled=false;}
 }
-
 function downloadImage() {
-  const canvas = document.getElementById("imageCanvas");
-
-  canvas.toBlob(blob => {
-    if (!blob) {
-      alert("Det gick inte att skapa bilden.");
-      return;
-    }
-
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-
-    link.href = url;
-    link.download = "proassist-bild.png";
-
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-
-    setTimeout(() => URL.revokeObjectURL(url),1000);
+  const canvas=document.getElementById("imageCanvas");
+  canvas.toBlob(blob=>{
+    if(!blob){alert("Det gick inte att skapa bilden.");return;}
+    const url=URL.createObjectURL(blob),link=document.createElement("a");
+    link.href=url;link.download="proassist-bild.png";document.body.appendChild(link);link.click();link.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),1000);
   },"image/png");
 }
+document.getElementById("generateImageBtn").addEventListener("click",generateImage);
+document.getElementById("downloadImageBtn").addEventListener("click",downloadImage);
 
-document.getElementById("generateImageBtn").addEventListener(
-  "click",
-  generateImage
-);
-
-document.getElementById("downloadImageBtn").addEventListener(
-  "click",
-  downloadImage
-);
-
-// ===============================
-// STARTA SPARADE CHATTAR
-// ===============================
-
-if (chats.length > 0) {
-  currentChatId = chats[0].id;
-}
-
-renderChatHomeList();
-
+// Första visningen
+loadChatsForCurrentAccount();
 </script>
 </body>
 </html>
+'''
+
+path = Path("/mnt/data/index.html")
+path.write_text(html, encoding="utf-8")
+print(f"Klart: {path} ({len(html):,} tecken)")
